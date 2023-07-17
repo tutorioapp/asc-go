@@ -1,8 +1,6 @@
 # asc-go
 
 [![PkgGoDev](https://pkg.go.dev/badge/github.com/tutorioapp/asc-go/asc)](https://pkg.go.dev/github.com/tutorioapp/asc-go/asc)
-[![Test Status](https://github.com/tutorioapp/asc-go/workflows/Run%20Tests/badge.svg)](https://github.com/tutorioapp/asc-go/actions?query=workflow%253A%2522Run+Tests%2522)
-[![codecov](https://codecov.io/gh/tutorioapp/asc-go/branch/main/graph/badge.svg)](https://codecov.io/gh/tutorioapp/asc-go)
 
 asc-go is a Go client library for accessing Apple's [App Store Connect API](https://developer.apple.com/documentation/appstoreconnectapi).
 

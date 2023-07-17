@@ -424,19 +424,19 @@ func (s *AppsService) GetInAppPurchase(ctx context.Context, id string, params *G
 	return res, resp, err
 }
 
-// InAppPurchaseType defines the type of in-app purchase (CONSUMABLE, NON_CONSUMABLE, NON_RENEWING_SUBSCRIPTION)
+// InAppPurchaseType defines the type of in-app purchase (CONSUMABLE, NON_CONSUMABLE, NON_RENEWING_SUBSCRIPTION).
 type InAppPurchaseType string
 
 const (
-	// InAppPurchaseTypeConsumable is a consumable in-app purchase
+	// InAppPurchaseTypeConsumable is a consumable in-app purchase.
 	InAppPurchaseTypeConsumable InAppPurchaseType = "CONSUMABLE"
-	// InAppPurchaseTypeNonConsumable is a non-consumable in-app purchase
+	// InAppPurchaseTypeNonConsumable is a non-consumable in-app purchase.
 	InAppPurchaseTypeNonConsumable InAppPurchaseType = "NON_CONSUMABLE"
-	// InAppPurchaseTypeNonRenewingSubscription is a non-renewing subscription in-app purchase
+	// InAppPurchaseTypeNonRenewingSubscription is a non-renewing subscription in-app purchase.
 	InAppPurchaseTypeNonRenewingSubscription InAppPurchaseType = "NON_RENEWING_SUBSCRIPTION"
 )
 
-// InAppPurchaseCreateRequestAttributes defines model for InAppPurchaseV2CreateRequest.Data.Attributes
+// InAppPurchaseCreateRequestAttributes defines model for InAppPurchaseV2CreateRequest.Data.Attributes.
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/inapppurchasev2createrequest/data/attributes
 type InAppPurchaseCreateRequestAttributes struct {
@@ -448,7 +448,7 @@ type InAppPurchaseCreateRequestAttributes struct {
 	ReviewNote                string            `json:"reviewNote"`
 }
 
-// inAppPurchaseV2CreateRequestData defines model for InAppPurchaseV2CreateRequest.Data
+// inAppPurchaseV2CreateRequestData defines model for InAppPurchaseV2CreateRequest.Data.
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/inapppurchasev2createrequest/data
 type inAppPurchaseCreateRequestData struct {

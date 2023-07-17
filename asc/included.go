@@ -26,7 +26,7 @@ import (
 )
 
 // ErrInvalidIncluded happens when an invalid "included" type is returned by the App Store Connect API.
-// If this is encountered, it should be reported as a bug to the cidertool/asc-go repository issue
+// If this is encountered, it should be reported as a bug to the tutorioapp/asc-go repository issue
 // tracker.
 type ErrInvalidIncluded struct {
 	Type string

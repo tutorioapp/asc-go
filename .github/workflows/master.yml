@@ -11,24 +11,16 @@ env:
 jobs:
   tests:
     name: unit tests
-    strategy:
-      matrix:
-        platform:
-          - ubuntu-latest
-          - windows-latest
-        go-version:
-          - 1.x
-          - 1.16.x
-    runs-on: ${{ matrix.platform }}
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: actions/setup-go@v1
+      - uses: actions/setup-go@v4
         with:
-          go-version: ${{ matrix.go-version }}
+          go-version: "1.20"
 
       - name: Cache Go Modules
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         with:
           path: ~/go/pkg/mod
           key: ${{ runner.os }}-go-${{ hashFiles('go.sum') }}
@@ -51,14 +43,13 @@ jobs:
     name: lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      - uses: actions/setup-go@v1
+      - uses: actions/setup-go@v4
         with:
-          go-version: '1.16'
+          go-version: '1.20'
 
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@master
+        uses: golangci/golangci-lint-action@3
         with:
-          version: v1.39
-          skip-go-installation: true
+          version: v1.53.3

@@ -23,6 +23,7 @@ vendor/
 .env
 *.p8
 .vscode/
+.idea/
 
 # System files
 Thumbs.db

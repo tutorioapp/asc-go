@@ -12,8 +12,12 @@ type SubscriptionsService service
 // https://developer.apple.com/documentation/appstoreconnectapi/subscriptiongroupcreaterequest/data
 type SubscriptionGroupData struct {
 	Attributes    SubscriptionGroupAttributes `json:"attributes"`
-	Relationships *Relationship               `json:"relationships"`
-	Type          string                      `json:"type"`
+	Relationships struct {
+		App struct {
+			Data *RelationshipData `json:"data"`
+		} `json:"app"`
+	} `json:"relationships"`
+	Type string `json:"type"`
 }
 
 // SubscriptionGroupAttributes defines https://developer.apple.com/documentation/appstoreconnectapi/subscriptiongroup/attributes
@@ -41,9 +45,17 @@ type SubscriptionGroupResponse struct {
 func (s *SubscriptionsService) CreateSubscriptionGroup(ctx context.Context, appID, groupName string) (*SubscriptionGroupResponse, *Response, error) {
 	res := new(SubscriptionGroupResponse)
 	resp, err := s.client.post(ctx, "v1/subscriptionGroups", newRequestBody(SubscriptionGroupData{
-		Attributes:    SubscriptionGroupAttributes{ReferenceName: groupName},
-		Relationships: &Relationship{Data: &RelationshipData{ID: appID, Type: "apps"}},
-		Type:          "subscriptionGroups",
+		Attributes: SubscriptionGroupAttributes{ReferenceName: groupName},
+		Relationships: struct {
+			App struct {
+				Data *RelationshipData `json:"data"`
+			} `json:"app"`
+		}{
+			App: struct {
+				Data *RelationshipData `json:"data"`
+			}{Data: &RelationshipData{ID: appID, Type: "apps"}},
+		},
+		Type: "subscriptionGroups",
 	}), res)
 	return res, resp, err
 }

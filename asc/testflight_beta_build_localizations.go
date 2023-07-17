@@ -160,7 +160,7 @@ func (s *TestflightService) ListBetaBuildLocalizations(ctx context.Context, para
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_beta_build_localization_information
 func (s *TestflightService) GetBetaBuildLocalization(ctx context.Context, id string, params *GetBetaBuildLocalizationQuery) (*BetaBuildLocalizationResponse, *Response, error) {
-	url := fmt.Sprintf("betaBuildLocalizations/%s", id)
+	url := fmt.Sprintf("v1/betaBuildLocalizations/%s", id)
 	res := new(BetaBuildLocalizationResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -171,7 +171,7 @@ func (s *TestflightService) GetBetaBuildLocalization(ctx context.Context, id str
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_the_build_information_of_a_beta_build_localization
 func (s *TestflightService) GetBuildForBetaBuildLocalization(ctx context.Context, id string, params *GetBuildForBetaBuildLocalizationQuery) (*BuildResponse, *Response, error) {
-	url := fmt.Sprintf("betaBuildLocalizations/%s/build", id)
+	url := fmt.Sprintf("v1/betaBuildLocalizations/%s/build", id)
 	res := new(BuildResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -182,7 +182,7 @@ func (s *TestflightService) GetBuildForBetaBuildLocalization(ctx context.Context
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/list_all_beta_build_localizations_of_a_build
 func (s *TestflightService) ListBetaBuildLocalizationsForBuild(ctx context.Context, id string, params *ListBetaBuildLocalizationsForBuildQuery) (*BetaBuildLocalizationsResponse, *Response, error) {
-	url := fmt.Sprintf("builds/%s/betaBuildLocalizations", id)
+	url := fmt.Sprintf("v1/builds/%s/betaBuildLocalizations", id)
 	res := new(BetaBuildLocalizationsResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -209,7 +209,7 @@ func (s *TestflightService) CreateBetaBuildLocalization(ctx context.Context, loc
 		Type: "betaBuildLocalizations",
 	}
 	res := new(BetaBuildLocalizationResponse)
-	resp, err := s.client.post(ctx, "betaBuildLocalizations", newRequestBody(req), res)
+	resp, err := s.client.post(ctx, "v1/betaBuildLocalizations", newRequestBody(req), res)
 
 	return res, resp, err
 }
@@ -229,7 +229,7 @@ func (s *TestflightService) UpdateBetaBuildLocalization(ctx context.Context, id 
 		}
 	}
 
-	url := fmt.Sprintf("betaBuildLocalizations/%s", id)
+	url := fmt.Sprintf("v1/betaBuildLocalizations/%s", id)
 	res := new(BetaBuildLocalizationResponse)
 	resp, err := s.client.patch(ctx, url, newRequestBody(req), res)
 
@@ -240,7 +240,7 @@ func (s *TestflightService) UpdateBetaBuildLocalization(ctx context.Context, id 
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/delete_a_beta_build_localization
 func (s *TestflightService) DeleteBetaBuildLocalization(ctx context.Context, id string) (*Response, error) {
-	url := fmt.Sprintf("betaBuildLocalizations/%s", id)
+	url := fmt.Sprintf("v1/betaBuildLocalizations/%s", id)
 
 	return s.client.delete(ctx, url, nil)
 }

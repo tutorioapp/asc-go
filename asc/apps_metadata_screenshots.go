@@ -127,7 +127,7 @@ type GetAppScreenshotQuery struct {
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_app_screenshot_information
 func (s *AppsService) GetAppScreenshot(ctx context.Context, id string, params *GetAppScreenshotQuery) (*AppScreenshotResponse, *Response, error) {
-	url := fmt.Sprintf("appScreenshots/%s", id)
+	url := fmt.Sprintf("v1/appScreenshots/%s", id)
 	res := new(AppScreenshotResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -154,7 +154,7 @@ func (s *AppsService) CreateAppScreenshot(ctx context.Context, fileName string, 
 		Type: "appScreenshots",
 	}
 	res := new(AppScreenshotResponse)
-	resp, err := s.client.post(ctx, "appScreenshots", newRequestBody(req), res)
+	resp, err := s.client.post(ctx, "v1/appScreenshots", newRequestBody(req), res)
 
 	return res, resp, err
 }
@@ -175,7 +175,7 @@ func (s *AppsService) CommitAppScreenshot(ctx context.Context, id string, upload
 		}
 	}
 
-	url := fmt.Sprintf("appScreenshots/%s", id)
+	url := fmt.Sprintf("v1/appScreenshots/%s", id)
 	res := new(AppScreenshotResponse)
 	resp, err := s.client.patch(ctx, url, newRequestBody(req), res)
 
@@ -186,7 +186,7 @@ func (s *AppsService) CommitAppScreenshot(ctx context.Context, id string, upload
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/delete_an_app_screenshot
 func (s *AppsService) DeleteAppScreenshot(ctx context.Context, id string) (*Response, error) {
-	url := fmt.Sprintf("appScreenshots/%s", id)
+	url := fmt.Sprintf("v1/appScreenshots/%s", id)
 
 	return s.client.delete(ctx, url, nil)
 }

@@ -70,7 +70,7 @@ func (s *TestflightService) CreateAvailableBuildNotification(ctx context.Context
 		Type: "buildBetaNotifications",
 	}
 	res := new(BuildBetaNotificationResponse)
-	resp, err := s.client.post(ctx, "buildBetaNotifications", newRequestBody(req), res)
+	resp, err := s.client.post(ctx, "v1/buildBetaNotifications", newRequestBody(req), res)
 
 	return res, resp, err
 }

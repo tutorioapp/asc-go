@@ -152,7 +152,7 @@ func (s *TestflightService) CreateBetaAppReviewSubmission(ctx context.Context, b
 		Type: "betaAppReviewSubmissions",
 	}
 	res := new(BetaAppReviewSubmissionResponse)
-	resp, err := s.client.post(ctx, "betaAppReviewSubmissions", newRequestBody(req), res)
+	resp, err := s.client.post(ctx, "v1/betaAppReviewSubmissions", newRequestBody(req), res)
 
 	return res, resp, err
 }
@@ -171,7 +171,7 @@ func (s *TestflightService) ListBetaAppReviewSubmissions(ctx context.Context, pa
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_beta_app_review_submission_information
 func (s *TestflightService) GetBetaAppReviewSubmission(ctx context.Context, id string, params *GetBetaAppReviewSubmissionQuery) (*BetaAppReviewSubmissionResponse, *Response, error) {
-	url := fmt.Sprintf("betaAppReviewSubmissions/%s", id)
+	url := fmt.Sprintf("v1/betaAppReviewSubmissions/%s", id)
 	res := new(BetaAppReviewSubmissionResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -182,7 +182,7 @@ func (s *TestflightService) GetBetaAppReviewSubmission(ctx context.Context, id s
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_the_build_information_of_a_beta_app_review_submission
 func (s *TestflightService) GetBuildForBetaAppReviewSubmission(ctx context.Context, id string, params *GetBuildForBetaAppReviewSubmissionQuery) (*BuildResponse, *Response, error) {
-	url := fmt.Sprintf("betaAppReviewSubmissions/%s/build", id)
+	url := fmt.Sprintf("v1/betaAppReviewSubmissions/%s/build", id)
 	res := new(BuildResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -193,7 +193,7 @@ func (s *TestflightService) GetBuildForBetaAppReviewSubmission(ctx context.Conte
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_the_beta_app_review_submission_of_a_build
 func (s *TestflightService) GetBetaAppReviewSubmissionForBuild(ctx context.Context, id string, params *GetBetaAppReviewSubmissionForBuildQuery) (*BetaAppReviewSubmissionResponse, *Response, error) {
-	url := fmt.Sprintf("builds/%s/betaAppReviewSubmission", id)
+	url := fmt.Sprintf("v1/builds/%s/betaAppReviewSubmission", id)
 	res := new(BetaAppReviewSubmissionResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 

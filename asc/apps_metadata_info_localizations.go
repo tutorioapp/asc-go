@@ -141,7 +141,7 @@ type GetAppInfoLocalizationQuery struct {
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/list_all_app_info_localizations_for_an_app_info
 func (s *AppsService) ListAppInfoLocalizationsForAppInfo(ctx context.Context, id string, params *ListAppInfoLocalizationsForAppInfoQuery) (*AppInfoLocalizationsResponse, *Response, error) {
-	url := fmt.Sprintf("appInfos/%s/appInfoLocalizations", id)
+	url := fmt.Sprintf("v1/appInfos/%s/appInfoLocalizations", id)
 	res := new(AppInfoLocalizationsResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -152,7 +152,7 @@ func (s *AppsService) ListAppInfoLocalizationsForAppInfo(ctx context.Context, id
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_app_info_localization_information
 func (s *AppsService) GetAppInfoLocalization(ctx context.Context, id string, params *GetAppInfoLocalizationQuery) (*AppInfoLocalizationResponse, *Response, error) {
-	url := fmt.Sprintf("appInfoLocalizations/%s", id)
+	url := fmt.Sprintf("v1/appInfoLocalizations/%s", id)
 	res := new(AppInfoLocalizationResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -176,7 +176,7 @@ func (s *AppsService) CreateAppInfoLocalization(ctx context.Context, attributes 
 		Type: "appInfoLocalizations",
 	}
 	res := new(AppInfoLocalizationResponse)
-	resp, err := s.client.post(ctx, "appInfoLocalizations", newRequestBody(req), res)
+	resp, err := s.client.post(ctx, "v1/appInfoLocalizations", newRequestBody(req), res)
 
 	return res, resp, err
 }
@@ -190,7 +190,7 @@ func (s *AppsService) UpdateAppInfoLocalization(ctx context.Context, id string, 
 		ID:         id,
 		Type:       "appInfoLocalizations",
 	}
-	url := fmt.Sprintf("appInfoLocalizations/%s", id)
+	url := fmt.Sprintf("v1/appInfoLocalizations/%s", id)
 	res := new(AppInfoLocalizationResponse)
 	resp, err := s.client.patch(ctx, url, newRequestBody(req), res)
 
@@ -201,7 +201,7 @@ func (s *AppsService) UpdateAppInfoLocalization(ctx context.Context, id string, 
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/delete_an_app_info_localization
 func (s *AppsService) DeleteAppInfoLocalization(ctx context.Context, id string) (*Response, error) {
-	url := fmt.Sprintf("appInfoLocalizations/%s", id)
+	url := fmt.Sprintf("v1/appInfoLocalizations/%s", id)
 
 	return s.client.delete(ctx, url, nil)
 }

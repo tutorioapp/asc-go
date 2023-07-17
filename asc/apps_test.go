@@ -114,6 +114,14 @@ func TestListInAppPurchasesForApp(t *testing.T) {
 	})
 }
 
+func TestCreateInAppPurchase(t *testing.T) {
+	t.Parallel()
+
+	testEndpointWithResponse(t, "{}", &InAppPurchaseResponse{}, func(ctx context.Context, client *Client) (interface{}, *Response, error) {
+		return client.Apps.CreateInAppPurchase(ctx, "10", InAppPurchaseCreateRequestAttributes{})
+	})
+}
+
 func TestGetInAppPurchase(t *testing.T) {
 	t.Parallel()
 

@@ -140,7 +140,7 @@ func (s *AppsService) CreateEULA(ctx context.Context, agreementText string, appI
 		Type: "endUserLicenseAgreements",
 	}
 	res := new(EndUserLicenseAgreementResponse)
-	resp, err := s.client.post(ctx, "endUserLicenseAgreements", newRequestBody(req), res)
+	resp, err := s.client.post(ctx, "v1/endUserLicenseAgreements", newRequestBody(req), res)
 
 	return res, resp, err
 }
@@ -166,7 +166,7 @@ func (s *AppsService) UpdateEULA(ctx context.Context, id string, agreementText *
 		}
 	}
 
-	url := fmt.Sprintf("endUserLicenseAgreements/%s", id)
+	url := fmt.Sprintf("v1/endUserLicenseAgreements/%s", id)
 	res := new(EndUserLicenseAgreementResponse)
 	resp, err := s.client.patch(ctx, url, newRequestBody(req), res)
 
@@ -177,7 +177,7 @@ func (s *AppsService) UpdateEULA(ctx context.Context, id string, agreementText *
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/delete_an_end_user_license_agreement
 func (s *AppsService) DeleteEULA(ctx context.Context, id string) (*Response, error) {
-	url := fmt.Sprintf("endUserLicenseAgreements/%s", id)
+	url := fmt.Sprintf("v1/endUserLicenseAgreements/%s", id)
 
 	return s.client.delete(ctx, url, nil)
 }
@@ -186,7 +186,7 @@ func (s *AppsService) DeleteEULA(ctx context.Context, id string) (*Response, err
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_end_user_license_agreement_information
 func (s *AppsService) GetEULA(ctx context.Context, id string, params *GetEULAQuery) (*EndUserLicenseAgreementResponse, *Response, error) {
-	url := fmt.Sprintf("endUserLicenseAgreements/%s", id)
+	url := fmt.Sprintf("v1/endUserLicenseAgreements/%s", id)
 	res := new(EndUserLicenseAgreementResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -197,7 +197,7 @@ func (s *AppsService) GetEULA(ctx context.Context, id string, params *GetEULAQue
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_the_end_user_license_agreement_information_of_an_app
 func (s *AppsService) GetEULAForApp(ctx context.Context, id string, params *GetEULAForAppQuery) (*EndUserLicenseAgreementResponse, *Response, error) {
-	url := fmt.Sprintf("apps/%s/endUserLicenseAgreement", id)
+	url := fmt.Sprintf("v1/apps/%s/endUserLicenseAgreement", id)
 	res := new(EndUserLicenseAgreementResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 

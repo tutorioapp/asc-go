@@ -132,7 +132,7 @@ type GetLogsForDiagnosticSignatureQuery struct {
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/get_power_and_performance_metrics_for_an_app
 func (s *ReportingService) GetPerfPowerMetricsForApp(ctx context.Context, id string, params *GetPerfPowerMetricsQuery) (*PerfPowerMetricsResponse, *Response, error) {
-	url := fmt.Sprintf("apps/%s/perfPowerMetrics", id)
+	url := fmt.Sprintf("v1/apps/%s/perfPowerMetrics", id)
 	res := new(PerfPowerMetricsResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -143,7 +143,7 @@ func (s *ReportingService) GetPerfPowerMetricsForApp(ctx context.Context, id str
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/get_power_and_performance_metrics_for_a_build
 func (s *ReportingService) GetPerfPowerMetricsForBuild(ctx context.Context, id string, params *GetPerfPowerMetricsQuery) (*PerfPowerMetricsResponse, *Response, error) {
-	url := fmt.Sprintf("builds/%s/perfPowerMetrics", id)
+	url := fmt.Sprintf("v1/builds/%s/perfPowerMetrics", id)
 	res := new(PerfPowerMetricsResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -154,7 +154,7 @@ func (s *ReportingService) GetPerfPowerMetricsForBuild(ctx context.Context, id s
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/list_all_diagnostic_signatures_for_a_build
 func (s *ReportingService) ListDiagnosticSignaturesForBuild(ctx context.Context, id string, params *ListDiagnosticsSignaturesQuery) (*DiagnosticSignaturesResponse, *Response, error) {
-	url := fmt.Sprintf("builds/%s/diagnosticSignatures", id)
+	url := fmt.Sprintf("v1/builds/%s/diagnosticSignatures", id)
 	res := new(DiagnosticSignaturesResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -165,7 +165,7 @@ func (s *ReportingService) ListDiagnosticSignaturesForBuild(ctx context.Context,
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/download_logs_for_a_diagnostic_signature
 func (s *ReportingService) GetLogsForDiagnosticSignature(ctx context.Context, id string, params *GetLogsForDiagnosticSignatureQuery) (*DiagnosticLogsResponse, *Response, error) {
-	url := fmt.Sprintf("diagnosticSignatures/%s/logs", id)
+	url := fmt.Sprintf("v1/diagnosticSignatures/%s/logs", id)
 	res := new(DiagnosticLogsResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 

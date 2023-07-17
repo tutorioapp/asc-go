@@ -132,7 +132,7 @@ func (s *AppsService) ListAppCategories(ctx context.Context, params *ListAppCate
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/list_all_subcategories_for_an_app_category
 func (s *AppsService) ListSubcategoriesForAppCategory(ctx context.Context, id string, params *ListSubcategoriesForAppCategoryQuery) (*AppCategoriesResponse, *Response, error) {
-	url := fmt.Sprintf("appCategories/%s/subcategories", id)
+	url := fmt.Sprintf("v1/appCategories/%s/subcategories", id)
 	res := new(AppCategoriesResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -143,7 +143,7 @@ func (s *AppsService) ListSubcategoriesForAppCategory(ctx context.Context, id st
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_app_category_information
 func (s *AppsService) GetAppCategory(ctx context.Context, id string, params *GetAppCategoryQuery) (*AppCategoryResponse, *Response, error) {
-	url := fmt.Sprintf("appCategories/%s", id)
+	url := fmt.Sprintf("v1/appCategories/%s", id)
 	res := new(AppCategoryResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -154,7 +154,7 @@ func (s *AppsService) GetAppCategory(ctx context.Context, id string, params *Get
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_the_parent_information_of_an_app_category
 func (s *AppsService) GetParentCategoryForAppCategory(ctx context.Context, id string, params *GetAppCategoryForAppInfoQuery) (*AppCategoryResponse, *Response, error) {
-	url := fmt.Sprintf("appCategories/%s/parent", id)
+	url := fmt.Sprintf("v1/appCategories/%s/parent", id)
 	res := new(AppCategoryResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -165,7 +165,7 @@ func (s *AppsService) GetParentCategoryForAppCategory(ctx context.Context, id st
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_the_primary_category_information_of_an_app_info
 func (s *AppsService) GetPrimaryCategoryForAppInfo(ctx context.Context, id string, params *GetAppCategoryForAppInfoQuery) (*AppCategoryResponse, *Response, error) {
-	url := fmt.Sprintf("appInfos/%s/primaryCategory", id)
+	url := fmt.Sprintf("v1/appInfos/%s/primaryCategory", id)
 	res := new(AppCategoryResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -176,7 +176,7 @@ func (s *AppsService) GetPrimaryCategoryForAppInfo(ctx context.Context, id strin
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_the_secondary_category_information_of_an_app_info
 func (s *AppsService) GetSecondaryCategoryForAppInfo(ctx context.Context, id string, params *GetAppCategoryForAppInfoQuery) (*AppCategoryResponse, *Response, error) {
-	url := fmt.Sprintf("appInfos/%s/secondaryCategory", id)
+	url := fmt.Sprintf("v1/appInfos/%s/secondaryCategory", id)
 	res := new(AppCategoryResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -187,7 +187,7 @@ func (s *AppsService) GetSecondaryCategoryForAppInfo(ctx context.Context, id str
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_the_primary_subcategory_one_information_of_an_app_info
 func (s *AppsService) GetPrimarySubcategoryOneForAppInfo(ctx context.Context, id string, params *GetAppCategoryForAppInfoQuery) (*AppCategoryResponse, *Response, error) {
-	url := fmt.Sprintf("appInfos/%s/primarySubcategoryOne", id)
+	url := fmt.Sprintf("v1/appInfos/%s/primarySubcategoryOne", id)
 	res := new(AppCategoryResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -198,7 +198,7 @@ func (s *AppsService) GetPrimarySubcategoryOneForAppInfo(ctx context.Context, id
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_the_primary_subcategory_two_information_of_an_app_info
 func (s *AppsService) GetPrimarySubcategoryTwoForAppInfo(ctx context.Context, id string, params *GetAppCategoryForAppInfoQuery) (*AppCategoryResponse, *Response, error) {
-	url := fmt.Sprintf("appInfos/%s/primarySubcategoryTwo", id)
+	url := fmt.Sprintf("v1/appInfos/%s/primarySubcategoryTwo", id)
 	res := new(AppCategoryResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -209,7 +209,7 @@ func (s *AppsService) GetPrimarySubcategoryTwoForAppInfo(ctx context.Context, id
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_the_secondary_subcategory_one_information_of_an_app_info
 func (s *AppsService) GetSecondarySubcategoryOneForAppInfo(ctx context.Context, id string, params *GetAppCategoryForAppInfoQuery) (*AppCategoryResponse, *Response, error) {
-	url := fmt.Sprintf("appInfos/%s/secondarySubcategoryOne", id)
+	url := fmt.Sprintf("v1/appInfos/%s/secondarySubcategoryOne", id)
 	res := new(AppCategoryResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -220,7 +220,7 @@ func (s *AppsService) GetSecondarySubcategoryOneForAppInfo(ctx context.Context, 
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_the_secondary_subcategory_two_information_of_an_app_info
 func (s *AppsService) GetSecondarySubcategoryTwoForAppInfo(ctx context.Context, id string, params *GetAppCategoryForAppInfoQuery) (*AppCategoryResponse, *Response, error) {
-	url := fmt.Sprintf("appInfos/%s/secondarySubcategoryTwo", id)
+	url := fmt.Sprintf("v1/appInfos/%s/secondarySubcategoryTwo", id)
 	res := new(AppCategoryResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 

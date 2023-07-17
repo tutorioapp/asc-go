@@ -255,7 +255,7 @@ func (s *BuildsService) ListBuilds(ctx context.Context, params *ListBuildsQuery)
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/list_all_builds_of_an_app
 func (s *BuildsService) ListBuildsForApp(ctx context.Context, id string, params *ListBuildsForAppQuery) (*BuildsResponse, *Response, error) {
-	url := fmt.Sprintf("apps/%s/builds", id)
+	url := fmt.Sprintf("v1/apps/%s/builds", id)
 	res := new(BuildsResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -266,7 +266,7 @@ func (s *BuildsService) ListBuildsForApp(ctx context.Context, id string, params 
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_build_information
 func (s *BuildsService) GetBuild(ctx context.Context, id string, params *GetBuildQuery) (*BuildResponse, *Response, error) {
-	url := fmt.Sprintf("builds/%s", id)
+	url := fmt.Sprintf("v1/builds/%s", id)
 	res := new(BuildResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -277,7 +277,7 @@ func (s *BuildsService) GetBuild(ctx context.Context, id string, params *GetBuil
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_the_app_information_of_a_build
 func (s *BuildsService) GetAppForBuild(ctx context.Context, id string, params *GetAppForBuildQuery) (*AppResponse, *Response, error) {
-	url := fmt.Sprintf("builds/%s/app", id)
+	url := fmt.Sprintf("v1/builds/%s/app", id)
 	res := new(AppResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -288,7 +288,7 @@ func (s *BuildsService) GetAppForBuild(ctx context.Context, id string, params *G
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_the_app_store_version_information_of_a_build
 func (s *BuildsService) GetAppStoreVersionForBuild(ctx context.Context, id string, params *GetAppStoreVersionForBuildQuery) (*AppStoreVersionResponse, *Response, error) {
-	url := fmt.Sprintf("builds/%s/appStoreVersion", id)
+	url := fmt.Sprintf("v1/builds/%s/appStoreVersion", id)
 	res := new(AppStoreVersionResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -299,7 +299,7 @@ func (s *BuildsService) GetAppStoreVersionForBuild(ctx context.Context, id strin
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_the_build_information_of_an_app_store_version
 func (s *BuildsService) GetBuildForAppStoreVersion(ctx context.Context, id string, params *GetBuildForAppStoreVersionQuery) (*BuildResponse, *Response, error) {
-	url := fmt.Sprintf("appStoreVersions/%s/build", id)
+	url := fmt.Sprintf("v1/appStoreVersions/%s/build", id)
 	res := new(BuildResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -328,7 +328,7 @@ func (s *BuildsService) UpdateBuild(ctx context.Context, id string, expired *boo
 		}
 	}
 
-	url := fmt.Sprintf("builds/%s", id)
+	url := fmt.Sprintf("v1/builds/%s", id)
 	res := new(BuildResponse)
 	resp, err := s.client.post(ctx, url, newRequestBody(req), res)
 
@@ -340,7 +340,7 @@ func (s *BuildsService) UpdateBuild(ctx context.Context, id string, expired *boo
 // https://developer.apple.com/documentation/appstoreconnectapi/assign_the_app_encryption_declaration_for_a_build
 func (s *BuildsService) UpdateAppEncryptionDeclarationForBuild(ctx context.Context, id string, appEncryptionDeclarationID *string) (*Response, error) {
 	linkage := newRelationshipDeclaration(appEncryptionDeclarationID, "builds")
-	url := fmt.Sprintf("builds/%s/relationships/appEncryptionDeclaration", id)
+	url := fmt.Sprintf("v1/builds/%s/relationships/appEncryptionDeclaration", id)
 
 	return s.client.patch(ctx, url, newRequestBody(linkage), nil)
 }
@@ -350,7 +350,7 @@ func (s *BuildsService) UpdateAppEncryptionDeclarationForBuild(ctx context.Conte
 // https://developer.apple.com/documentation/appstoreconnectapi/add_access_for_beta_groups_to_a_build
 func (s *BuildsService) CreateAccessForBetaGroupsToBuild(ctx context.Context, id string, betaGroupIDs []string) (*Response, error) {
 	linkages := newPagedRelationshipDeclaration(betaGroupIDs, "betaGroups")
-	url := fmt.Sprintf("builds/%s/relationships/betaGroups", id)
+	url := fmt.Sprintf("v1/builds/%s/relationships/betaGroups", id)
 
 	return s.client.post(ctx, url, newRequestBody(linkages.Data), nil)
 }
@@ -360,7 +360,7 @@ func (s *BuildsService) CreateAccessForBetaGroupsToBuild(ctx context.Context, id
 // https://developer.apple.com/documentation/appstoreconnectapi/remove_access_for_beta_groups_to_a_build
 func (s *BuildsService) RemoveAccessForBetaGroupsFromBuild(ctx context.Context, id string, betaGroupIDs []string) (*Response, error) {
 	linkages := newPagedRelationshipDeclaration(betaGroupIDs, "betaGroups")
-	url := fmt.Sprintf("builds/%s/relationships/betaGroups", id)
+	url := fmt.Sprintf("v1/builds/%s/relationships/betaGroups", id)
 
 	return s.client.delete(ctx, url, newRequestBody(linkages.Data))
 }
@@ -370,7 +370,7 @@ func (s *BuildsService) RemoveAccessForBetaGroupsFromBuild(ctx context.Context, 
 // https://developer.apple.com/documentation/appstoreconnectapi/assign_individual_testers_to_a_build
 func (s *BuildsService) CreateAccessForIndividualTestersToBuild(ctx context.Context, id string, betaTesterIDs []string) (*Response, error) {
 	linkages := newPagedRelationshipDeclaration(betaTesterIDs, "betaTesters")
-	url := fmt.Sprintf("builds/%s/relationships/individualTesters", id)
+	url := fmt.Sprintf("v1/builds/%s/relationships/individualTesters", id)
 
 	return s.client.post(ctx, url, newRequestBody(linkages.Data), nil)
 }
@@ -380,7 +380,7 @@ func (s *BuildsService) CreateAccessForIndividualTestersToBuild(ctx context.Cont
 // https://developer.apple.com/documentation/appstoreconnectapi/remove_individual_testers_from_a_build
 func (s *BuildsService) RemoveAccessForIndividualTestersFromBuild(ctx context.Context, id string, betaTesterIDs []string) (*Response, error) {
 	linkages := newPagedRelationshipDeclaration(betaTesterIDs, "betaTesters")
-	url := fmt.Sprintf("builds/%s/relationships/individualTesters", id)
+	url := fmt.Sprintf("v1/builds/%s/relationships/individualTesters", id)
 
 	return s.client.delete(ctx, url, newRequestBody(linkages.Data))
 }
@@ -389,7 +389,7 @@ func (s *BuildsService) RemoveAccessForIndividualTestersFromBuild(ctx context.Co
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/get_all_resource_ids_of_individual_testers_for_a_build
 func (s *BuildsService) ListResourceIDsForIndividualTestersForBuild(ctx context.Context, id string, params *ListResourceIDsForIndividualTestersForBuildQuery) (*BuildIndividualTestersLinkagesResponse, *Response, error) {
-	url := fmt.Sprintf("builds/%s/relationships/individualTesters", id)
+	url := fmt.Sprintf("v1/builds/%s/relationships/individualTesters", id)
 	res := new(BuildIndividualTestersLinkagesResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -400,7 +400,7 @@ func (s *BuildsService) ListResourceIDsForIndividualTestersForBuild(ctx context.
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_the_app_encryption_declaration_of_a_build
 func (s *BuildsService) GetAppEncryptionDeclarationForBuild(ctx context.Context, id string, params *GetAppEncryptionDeclarationForBuildQuery) (*AppEncryptionDeclarationResponse, *Response, error) {
-	url := fmt.Sprintf("builds/%s/appEncryptionDeclaration", id)
+	url := fmt.Sprintf("v1/builds/%s/appEncryptionDeclaration", id)
 	res := new(AppEncryptionDeclarationResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -411,7 +411,7 @@ func (s *BuildsService) GetAppEncryptionDeclarationForBuild(ctx context.Context,
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/get_the_app_encryption_declaration_id_for_a_build
 func (s *BuildsService) GetAppEncryptionDeclarationIDForBuild(ctx context.Context, id string) (*BuildAppEncryptionDeclarationLinkageResponse, *Response, error) {
-	url := fmt.Sprintf("builds/%s/relationships/appEncryptionDeclaration", id)
+	url := fmt.Sprintf("v1/builds/%s/relationships/appEncryptionDeclaration", id)
 	res := new(BuildAppEncryptionDeclarationLinkageResponse)
 	resp, err := s.client.get(ctx, url, nil, res)
 

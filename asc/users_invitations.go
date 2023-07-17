@@ -143,7 +143,7 @@ func (s *UsersService) ListInvitations(ctx context.Context, params *ListInvitati
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_user_invitation_information
 func (s *UsersService) GetInvitation(ctx context.Context, id string, params *GetInvitationQuery) (*UserInvitationResponse, *Response, error) {
-	url := fmt.Sprintf("userInvitations/%s", id)
+	url := fmt.Sprintf("v1/userInvitations/%s", id)
 	res := new(UserInvitationResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -167,7 +167,7 @@ func (s *UsersService) CreateInvitation(ctx context.Context, attributes UserInvi
 	}
 
 	res := new(UserInvitationResponse)
-	resp, err := s.client.post(ctx, "userInvitations", newRequestBody(req), res)
+	resp, err := s.client.post(ctx, "v1/userInvitations", newRequestBody(req), res)
 
 	return res, resp, err
 }
@@ -176,7 +176,7 @@ func (s *UsersService) CreateInvitation(ctx context.Context, attributes UserInvi
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/cancel_a_user_invitation
 func (s *UsersService) CancelInvitation(ctx context.Context, id string) (*Response, error) {
-	url := fmt.Sprintf("userInvitations/%s", id)
+	url := fmt.Sprintf("v1/userInvitations/%s", id)
 
 	return s.client.delete(ctx, url, nil)
 }
@@ -185,7 +185,7 @@ func (s *UsersService) CancelInvitation(ctx context.Context, id string) (*Respon
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/list_all_apps_visible_to_an_invited_user
 func (s *UsersService) ListVisibleAppsForInvitation(ctx context.Context, id string, params *ListVisibleAppsQuery) (*AppsResponse, *Response, error) {
-	url := fmt.Sprintf("userInvitations/%s/visibleApps", id)
+	url := fmt.Sprintf("v1/userInvitations/%s/visibleApps", id)
 	res := new(AppsResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 

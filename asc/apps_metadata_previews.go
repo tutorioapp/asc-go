@@ -178,7 +178,7 @@ type GetAppPreviewQuery struct {
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_app_preview_information
 func (s *AppsService) GetAppPreview(ctx context.Context, id string, params *GetAppPreviewQuery) (*AppPreviewResponse, *Response, error) {
-	url := fmt.Sprintf("appPreviews/%s", id)
+	url := fmt.Sprintf("v1/appPreviews/%s", id)
 	res := new(AppPreviewResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -205,7 +205,7 @@ func (s *AppsService) CreateAppPreview(ctx context.Context, fileName string, fil
 		Type: "appPreviews",
 	}
 	res := new(AppPreviewResponse)
-	resp, err := s.client.post(ctx, "appPreviews", newRequestBody(req), res)
+	resp, err := s.client.post(ctx, "v1/appPreviews", newRequestBody(req), res)
 
 	return res, resp, err
 }
@@ -227,7 +227,7 @@ func (s *AppsService) CommitAppPreview(ctx context.Context, id string, uploaded 
 		}
 	}
 
-	url := fmt.Sprintf("appPreviews/%s", id)
+	url := fmt.Sprintf("v1/appPreviews/%s", id)
 	res := new(AppPreviewResponse)
 	resp, err := s.client.patch(ctx, url, newRequestBody(req), res)
 
@@ -238,7 +238,7 @@ func (s *AppsService) CommitAppPreview(ctx context.Context, id string, uploaded 
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/delete_an_app_preview
 func (s *AppsService) DeleteAppPreview(ctx context.Context, id string) (*Response, error) {
-	url := fmt.Sprintf("appPreviews/%s", id)
+	url := fmt.Sprintf("v1/appPreviews/%s", id)
 
 	return s.client.delete(ctx, url, nil)
 }

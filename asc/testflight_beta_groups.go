@@ -260,7 +260,7 @@ func (s *TestflightService) CreateBetaGroup(ctx context.Context, attributes Beta
 	}
 
 	res := new(BetaGroupResponse)
-	resp, err := s.client.post(ctx, "betaGroups", newRequestBody(req), res)
+	resp, err := s.client.post(ctx, "v1/betaGroups", newRequestBody(req), res)
 
 	return res, resp, err
 }
@@ -274,7 +274,7 @@ func (s *TestflightService) UpdateBetaGroup(ctx context.Context, id string, attr
 		ID:         id,
 		Type:       "betaGroups",
 	}
-	url := fmt.Sprintf("betaGroups/%s", id)
+	url := fmt.Sprintf("v1/betaGroups/%s", id)
 	res := new(BetaGroupResponse)
 	resp, err := s.client.patch(ctx, url, newRequestBody(req), res)
 
@@ -285,7 +285,7 @@ func (s *TestflightService) UpdateBetaGroup(ctx context.Context, id string, attr
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/delete_a_beta_group
 func (s *TestflightService) DeleteBetaGroup(ctx context.Context, id string) (*Response, error) {
-	url := fmt.Sprintf("betaGroups/%s", id)
+	url := fmt.Sprintf("v1/betaGroups/%s", id)
 
 	return s.client.delete(ctx, url, nil)
 }
@@ -304,7 +304,7 @@ func (s *TestflightService) ListBetaGroups(ctx context.Context, params *ListBeta
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_beta_group_information
 func (s *TestflightService) GetBetaGroup(ctx context.Context, id string, params *GetBetaGroupQuery) (*BetaGroupResponse, *Response, error) {
-	url := fmt.Sprintf("betaGroups/%s", id)
+	url := fmt.Sprintf("v1/betaGroups/%s", id)
 	res := new(BetaGroupResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -315,7 +315,7 @@ func (s *TestflightService) GetBetaGroup(ctx context.Context, id string, params 
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_the_app_information_of_a_beta_group
 func (s *TestflightService) GetAppForBetaGroup(ctx context.Context, id string, params *GetAppForBetaGroupQuery) (*AppResponse, *Response, error) {
-	url := fmt.Sprintf("betaGroups/%s/app", id)
+	url := fmt.Sprintf("v1/betaGroups/%s/app", id)
 	res := new(AppResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -326,7 +326,7 @@ func (s *TestflightService) GetAppForBetaGroup(ctx context.Context, id string, p
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/list_all_beta_groups_for_an_app
 func (s *TestflightService) ListBetaGroupsForApp(ctx context.Context, id string, params *ListBetaGroupsForAppQuery) (*BetaGroupsResponse, *Response, error) {
-	url := fmt.Sprintf("apps/%s/betaGroups", id)
+	url := fmt.Sprintf("v1/apps/%s/betaGroups", id)
 	res := new(BetaGroupsResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -338,7 +338,7 @@ func (s *TestflightService) ListBetaGroupsForApp(ctx context.Context, id string,
 // https://developer.apple.com/documentation/appstoreconnectapi/add_beta_testers_to_a_beta_group
 func (s *TestflightService) AddBetaTestersToBetaGroup(ctx context.Context, id string, betaTesterIDs []string) (*Response, error) {
 	linkages := newPagedRelationshipDeclaration(betaTesterIDs, "betaTesters")
-	url := fmt.Sprintf("betaGroups/%s/relationships/betaTesters", id)
+	url := fmt.Sprintf("v1/betaGroups/%s/relationships/betaTesters", id)
 
 	return s.client.post(ctx, url, newRequestBody(linkages.Data), nil)
 }
@@ -348,7 +348,7 @@ func (s *TestflightService) AddBetaTestersToBetaGroup(ctx context.Context, id st
 // https://developer.apple.com/documentation/appstoreconnectapi/remove_beta_testers_from_a_beta_group
 func (s *TestflightService) RemoveBetaTestersFromBetaGroup(ctx context.Context, id string, betaTesterIDs []string) (*Response, error) {
 	linkages := newPagedRelationshipDeclaration(betaTesterIDs, "betaTesters")
-	url := fmt.Sprintf("betaGroups/%s/relationships/betaTesters", id)
+	url := fmt.Sprintf("v1/betaGroups/%s/relationships/betaTesters", id)
 
 	return s.client.delete(ctx, url, newRequestBody(linkages.Data))
 }
@@ -358,7 +358,7 @@ func (s *TestflightService) RemoveBetaTestersFromBetaGroup(ctx context.Context, 
 // https://developer.apple.com/documentation/appstoreconnectapi/add_builds_to_a_beta_group
 func (s *TestflightService) AddBuildsToBetaGroup(ctx context.Context, id string, buildIDs []string) (*Response, error) {
 	linkages := newPagedRelationshipDeclaration(buildIDs, "builds")
-	url := fmt.Sprintf("betaGroups/%s/relationships/builds", id)
+	url := fmt.Sprintf("v1/betaGroups/%s/relationships/builds", id)
 
 	return s.client.post(ctx, url, newRequestBody(linkages.Data), nil)
 }
@@ -368,7 +368,7 @@ func (s *TestflightService) AddBuildsToBetaGroup(ctx context.Context, id string,
 // https://developer.apple.com/documentation/appstoreconnectapi/remove_builds_from_a_beta_group
 func (s *TestflightService) RemoveBuildsFromBetaGroup(ctx context.Context, id string, buildIDs []string) (*Response, error) {
 	linkages := newPagedRelationshipDeclaration(buildIDs, "builds")
-	url := fmt.Sprintf("betaGroups/%s/relationships/builds", id)
+	url := fmt.Sprintf("v1/betaGroups/%s/relationships/builds", id)
 
 	return s.client.delete(ctx, url, newRequestBody(linkages.Data))
 }
@@ -377,7 +377,7 @@ func (s *TestflightService) RemoveBuildsFromBetaGroup(ctx context.Context, id st
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/list_all_builds_for_a_betagroup
 func (s *TestflightService) ListBuildsForBetaGroup(ctx context.Context, id string, params *ListBuildsForBetaGroupQuery) (*BuildsResponse, *Response, error) {
-	url := fmt.Sprintf("betaGroups/%s/builds", id)
+	url := fmt.Sprintf("v1/betaGroups/%s/builds", id)
 	res := new(BuildsResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -388,7 +388,7 @@ func (s *TestflightService) ListBuildsForBetaGroup(ctx context.Context, id strin
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/get_all_build_ids_in_a_beta_group
 func (s *TestflightService) ListBuildIDsForBetaGroup(ctx context.Context, id string, params *ListBuildIDsForBetaGroupQuery) (*BetaGroupBuildsLinkagesResponse, *Response, error) {
-	url := fmt.Sprintf("betaGroups/%s/relationships/builds", id)
+	url := fmt.Sprintf("v1/betaGroups/%s/relationships/builds", id)
 	res := new(BetaGroupBuildsLinkagesResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -399,7 +399,7 @@ func (s *TestflightService) ListBuildIDsForBetaGroup(ctx context.Context, id str
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/list_all_beta_testers_in_a_betagroup
 func (s *TestflightService) ListBetaTestersForBetaGroup(ctx context.Context, id string, params *ListBetaTestersForBetaGroupQuery) (*BetaTestersResponse, *Response, error) {
-	url := fmt.Sprintf("betaGroups/%s/betaTesters", id)
+	url := fmt.Sprintf("v1/betaGroups/%s/betaTesters", id)
 	res := new(BetaTestersResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -410,7 +410,7 @@ func (s *TestflightService) ListBetaTestersForBetaGroup(ctx context.Context, id 
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/get_all_beta_tester_ids_in_a_beta_group
 func (s *TestflightService) ListBetaTesterIDsForBetaGroup(ctx context.Context, id string, params *ListBetaTesterIDsForBetaGroupQuery) (*BetaGroupBetaTestersLinkagesResponse, *Response, error) {
-	url := fmt.Sprintf("betaGroups/%s/relationships/betaTesters", id)
+	url := fmt.Sprintf("v1/betaGroups/%s/relationships/betaTesters", id)
 	res := new(BetaGroupBetaTestersLinkagesResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 

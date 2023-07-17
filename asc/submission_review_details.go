@@ -157,7 +157,7 @@ func (s *SubmissionService) CreateReviewDetail(ctx context.Context, attributes *
 		Type: "appStoreReviewDetails",
 	}
 	res := new(AppStoreReviewDetailResponse)
-	resp, err := s.client.post(ctx, "appStoreReviewDetails", newRequestBody(req), res)
+	resp, err := s.client.post(ctx, "v1/appStoreReviewDetails", newRequestBody(req), res)
 
 	return res, resp, err
 }
@@ -166,7 +166,7 @@ func (s *SubmissionService) CreateReviewDetail(ctx context.Context, attributes *
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_app_store_review_detail_information
 func (s *SubmissionService) GetReviewDetail(ctx context.Context, id string, params *GetReviewDetailQuery) (*AppStoreReviewDetailResponse, *Response, error) {
-	url := fmt.Sprintf("appStoreReviewDetails/%s", id)
+	url := fmt.Sprintf("v1/appStoreReviewDetails/%s", id)
 	res := new(AppStoreReviewDetailResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -177,7 +177,7 @@ func (s *SubmissionService) GetReviewDetail(ctx context.Context, id string, para
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_the_app_store_review_details_resource_information_of_an_app_store_version
 func (s *SubmissionService) GetReviewDetailsForAppStoreVersion(ctx context.Context, id string, params *GetAppStoreReviewDetailsForAppStoreVersionQuery) (*AppStoreReviewDetailResponse, *Response, error) {
-	url := fmt.Sprintf("appStoreVersions/%s/appStoreReviewDetail", id)
+	url := fmt.Sprintf("v1/appStoreVersions/%s/appStoreReviewDetail", id)
 	res := new(AppStoreReviewDetailResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -193,7 +193,7 @@ func (s *SubmissionService) UpdateReviewDetail(ctx context.Context, id string, a
 		ID:         id,
 		Type:       "appStoreReviewDetails",
 	}
-	url := fmt.Sprintf("appStoreReviewDetails/%s", id)
+	url := fmt.Sprintf("v1/appStoreReviewDetails/%s", id)
 	res := new(AppStoreReviewDetailResponse)
 	resp, err := s.client.patch(ctx, url, newRequestBody(req), res)
 

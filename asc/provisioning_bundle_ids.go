@@ -192,7 +192,7 @@ func (s *ProvisioningService) CreateBundleID(ctx context.Context, attributes Bun
 		Type:       "bundleIds",
 	}
 	res := new(BundleIDResponse)
-	resp, err := s.client.post(ctx, "bundleIds", newRequestBody(req), res)
+	resp, err := s.client.post(ctx, "v1/bundleIds", newRequestBody(req), res)
 
 	return res, resp, err
 }
@@ -212,7 +212,7 @@ func (s *ProvisioningService) UpdateBundleID(ctx context.Context, id string, nam
 		}
 	}
 
-	url := fmt.Sprintf("bundleIds/%s", id)
+	url := fmt.Sprintf("v1/bundleIds/%s", id)
 	res := new(BundleIDResponse)
 	resp, err := s.client.patch(ctx, url, newRequestBody(req), res)
 
@@ -223,7 +223,7 @@ func (s *ProvisioningService) UpdateBundleID(ctx context.Context, id string, nam
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/delete_a_bundle_id
 func (s *ProvisioningService) DeleteBundleID(ctx context.Context, id string) (*Response, error) {
-	url := fmt.Sprintf("bundleIds/%s", id)
+	url := fmt.Sprintf("v1/bundleIds/%s", id)
 
 	return s.client.delete(ctx, url, nil)
 }
@@ -242,7 +242,7 @@ func (s *ProvisioningService) ListBundleIDs(ctx context.Context, params *ListBun
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_bundle_id_information
 func (s *ProvisioningService) GetBundleID(ctx context.Context, id string, params *GetBundleIDQuery) (*BundleIDResponse, *Response, error) {
-	url := fmt.Sprintf("bundleIds/%s", id)
+	url := fmt.Sprintf("v1/bundleIds/%s", id)
 	res := new(BundleIDResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -253,7 +253,7 @@ func (s *ProvisioningService) GetBundleID(ctx context.Context, id string, params
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_the_app_information_of_a_bundle_id
 func (s *ProvisioningService) GetAppForBundleID(ctx context.Context, id string, params *GetAppForBundleIDQuery) (*AppResponse, *Response, error) {
-	url := fmt.Sprintf("bundleIds/%s/app", id)
+	url := fmt.Sprintf("v1/bundleIds/%s/app", id)
 	res := new(AppResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -264,7 +264,7 @@ func (s *ProvisioningService) GetAppForBundleID(ctx context.Context, id string, 
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/list_all_profiles_for_a_bundle_id
 func (s *ProvisioningService) ListProfilesForBundleID(ctx context.Context, id string, params *ListProfilesForBundleIDQuery) (*ProfilesResponse, *Response, error) {
-	url := fmt.Sprintf("bundleIds/%s/profiles", id)
+	url := fmt.Sprintf("v1/bundleIds/%s/profiles", id)
 	res := new(ProfilesResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -275,7 +275,7 @@ func (s *ProvisioningService) ListProfilesForBundleID(ctx context.Context, id st
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/list_all_capabilities_for_a_bundle_id
 func (s *ProvisioningService) ListCapabilitiesForBundleID(ctx context.Context, id string, params *ListCapabilitiesForBundleIDQuery) (*BundleIDCapabilitiesResponse, *Response, error) {
-	url := fmt.Sprintf("bundleIds/%s/bundleIdCapabilities", id)
+	url := fmt.Sprintf("v1/bundleIds/%s/bundleIdCapabilities", id)
 	res := new(BundleIDCapabilitiesResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 

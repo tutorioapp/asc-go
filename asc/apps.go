@@ -299,7 +299,7 @@ func (s *AppsService) ListApps(ctx context.Context, params *ListAppsQuery) (*App
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_app_information
 func (s *AppsService) GetApp(ctx context.Context, id string, params *GetAppQuery) (*AppResponse, *Response, error) {
-	url := fmt.Sprintf("apps/%s", id)
+	url := fmt.Sprintf("v1/apps/%s", id)
 	res := new(AppResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -385,7 +385,7 @@ func (s *AppsService) UpdateApp(ctx context.Context, id string, attributes *AppU
 		}
 	}
 
-	url := fmt.Sprintf("apps/%s", id)
+	url := fmt.Sprintf("v1/apps/%s", id)
 	res := new(AppResponse)
 	resp, err := s.client.patch(ctx, url, newRequestBodyWithIncluded(req, newAppPrices), res)
 
@@ -397,7 +397,7 @@ func (s *AppsService) UpdateApp(ctx context.Context, id string, attributes *AppU
 // https://developer.apple.com/documentation/appstoreconnectapi/remove_beta_testers_from_all_groups_and_builds_of_an_app
 func (s *AppsService) RemoveBetaTestersFromApp(ctx context.Context, id string, betaTesterIDs []string) (*Response, error) {
 	linkages := newPagedRelationshipDeclaration(betaTesterIDs, "betaTesters")
-	url := fmt.Sprintf("apps/%s/relationships/betaTesters", id)
+	url := fmt.Sprintf("v1/apps/%s/relationships/betaTesters", id)
 
 	return s.client.delete(ctx, url, newRequestBody(linkages.Data))
 }
@@ -406,7 +406,7 @@ func (s *AppsService) RemoveBetaTestersFromApp(ctx context.Context, id string, b
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/list_all_in-app_purchases_for_an_app
 func (s *AppsService) ListInAppPurchasesForApp(ctx context.Context, id string, params *ListInAppPurchasesQuery) (*InAppPurchasesResponse, *Response, error) {
-	url := fmt.Sprintf("apps/%s/inAppPurchases", id)
+	url := fmt.Sprintf("v1/apps/%s/inAppPurchases", id)
 	res := new(InAppPurchasesResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -417,10 +417,62 @@ func (s *AppsService) ListInAppPurchasesForApp(ctx context.Context, id string, p
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_in-app_purchase_information
 func (s *AppsService) GetInAppPurchase(ctx context.Context, id string, params *GetInAppPurchaseQuery) (*InAppPurchaseResponse, *Response, error) {
-	url := fmt.Sprintf("inAppPurchases/%s", id)
+	url := fmt.Sprintf("v1/inAppPurchases/%s", id)
 	res := new(InAppPurchaseResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
+	return res, resp, err
+}
+
+// InAppPurchaseType defines the type of in-app purchase (CONSUMABLE, NON_CONSUMABLE, NON_RENEWING_SUBSCRIPTION)
+type InAppPurchaseType string
+
+const (
+	// InAppPurchaseTypeConsumable is a consumable in-app purchase
+	InAppPurchaseTypeConsumable InAppPurchaseType = "CONSUMABLE"
+	// InAppPurchaseTypeNonConsumable is a non-consumable in-app purchase
+	InAppPurchaseTypeNonConsumable InAppPurchaseType = "NON_CONSUMABLE"
+	// InAppPurchaseTypeNonRenewingSubscription is a non-renewing subscription in-app purchase
+	InAppPurchaseTypeNonRenewingSubscription InAppPurchaseType = "NON_RENEWING_SUBSCRIPTION"
+)
+
+// InAppPurchaseCreateRequestAttributes defines model for InAppPurchaseV2CreateRequest.Data.Attributes
+//
+// https://developer.apple.com/documentation/appstoreconnectapi/inapppurchasev2createrequest/data/attributes
+type InAppPurchaseCreateRequestAttributes struct {
+	AvailableInAllTerritories bool              `json:"availableInAllTerritories"`
+	FamilySharable            bool              `json:"familySharable"`
+	InAppPurchaseType         InAppPurchaseType `json:"inAppPurchaseType"`
+	Name                      string            `json:"name"`
+	ProductID                 string            `json:"productId"`
+	ReviewNote                string            `json:"reviewNote"`
+}
+
+// inAppPurchaseV2CreateRequestData defines model for InAppPurchaseV2CreateRequest.Data
+//
+// https://developer.apple.com/documentation/appstoreconnectapi/inapppurchasev2createrequest/data
+type inAppPurchaseCreateRequestData struct {
+	Attributes    InAppPurchaseCreateRequestAttributes `json:"attributes"`
+	Relationships *Relationship                        `json:"relationships"`
+	Type          string                               `json:"type"`
+}
+
+// CreateInAppPurchase create an in-app purchase, including a consumable, non-consumable, or non-renewing subscription.
+//
+// https://developer.apple.com/documentation/appstoreconnectapi/create_an_in-app_purchase
+func (s *AppsService) CreateInAppPurchase(ctx context.Context, appID string, attributes InAppPurchaseCreateRequestAttributes) (*InAppPurchaseResponse, *Response, error) {
+	res := new(InAppPurchaseResponse)
+	resp, err := s.client.post(ctx, "v2/inAppPurchases", newRequestBody(inAppPurchaseCreateRequestData{
+		Attributes: attributes,
+		Relationships: &Relationship{
+			Data: &RelationshipData{
+				ID:   appID,
+				Type: "apps",
+			},
+			Links: nil,
+		},
+		Type: "inAppPurchases",
+	}), res)
 	return res, resp, err
 }
 

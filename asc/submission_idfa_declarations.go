@@ -130,7 +130,7 @@ func (s *SubmissionService) CreateIDFADeclaration(ctx context.Context, attribute
 		Type: "idfaDeclarations",
 	}
 	res := new(IDFADeclarationResponse)
-	resp, err := s.client.post(ctx, "idfaDeclarations", newRequestBody(req), res)
+	resp, err := s.client.post(ctx, "v1/idfaDeclarations", newRequestBody(req), res)
 
 	return res, resp, err
 }
@@ -144,7 +144,7 @@ func (s *SubmissionService) UpdateIDFADeclaration(ctx context.Context, id string
 		ID:         id,
 		Type:       "idfaDeclarations",
 	}
-	url := fmt.Sprintf("idfaDeclarations/%s", id)
+	url := fmt.Sprintf("v1/idfaDeclarations/%s", id)
 	res := new(IDFADeclarationResponse)
 	resp, err := s.client.patch(ctx, url, newRequestBody(req), res)
 
@@ -155,7 +155,7 @@ func (s *SubmissionService) UpdateIDFADeclaration(ctx context.Context, id string
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/delete_an_idfa_declaration
 func (s *SubmissionService) DeleteIDFADeclaration(ctx context.Context, id string) (*Response, error) {
-	url := fmt.Sprintf("idfaDeclarations/%s", id)
+	url := fmt.Sprintf("v1/idfaDeclarations/%s", id)
 
 	return s.client.delete(ctx, url, nil)
 }
@@ -164,7 +164,7 @@ func (s *SubmissionService) DeleteIDFADeclaration(ctx context.Context, id string
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_the_idfa_declaration_information_of_an_app_store_version
 func (s *SubmissionService) GetIDFADeclarationForAppStoreVersion(ctx context.Context, id string, params *GetIDFADeclarationForAppStoreVersionQuery) (*IDFADeclarationResponse, *Response, error) {
-	url := fmt.Sprintf("appStoreVersions/%s/idfaDeclaration", id)
+	url := fmt.Sprintf("v1/appStoreVersions/%s/idfaDeclaration", id)
 	res := new(IDFADeclarationResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 

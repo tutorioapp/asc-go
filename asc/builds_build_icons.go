@@ -83,7 +83,7 @@ type ListIconsQuery struct {
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/list_all_icons_for_a_build
 func (s *BuildsService) ListIconsForBuild(ctx context.Context, id string, params *ListIconsQuery) (*BuildIconsResponse, *Response, error) {
-	url := fmt.Sprintf("builds/%s/icons", id)
+	url := fmt.Sprintf("v1/builds/%s/icons", id)
 	res := new(BuildIconsResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 

@@ -142,7 +142,7 @@ func (s *BuildsService) ListAppEncryptionDeclarations(ctx context.Context, param
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_app_encryption_declaration_information
 func (s *BuildsService) GetAppEncryptionDeclaration(ctx context.Context, id string, params *GetAppEncryptionDeclarationQuery) (*AppEncryptionDeclarationResponse, *Response, error) {
-	url := fmt.Sprintf("appEncryptionDeclarations/%s", id)
+	url := fmt.Sprintf("v1/appEncryptionDeclarations/%s", id)
 	res := new(AppEncryptionDeclarationResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -153,7 +153,7 @@ func (s *BuildsService) GetAppEncryptionDeclaration(ctx context.Context, id stri
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_the_app_information_of_an_app_encryption_declaration
 func (s *BuildsService) GetAppForAppEncryptionDeclaration(ctx context.Context, id string, params *GetAppForEncryptionDeclarationQuery) (*AppResponse, *Response, error) {
-	url := fmt.Sprintf("appEncryptionDeclarations/%s/app", id)
+	url := fmt.Sprintf("v1/appEncryptionDeclarations/%s/app", id)
 	res := new(AppResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -165,7 +165,7 @@ func (s *BuildsService) GetAppForAppEncryptionDeclaration(ctx context.Context, i
 // https://developer.apple.com/documentation/appstoreconnectapi/assign_builds_to_an_app_encryption_declaration
 func (s *BuildsService) AssignBuildsToAppEncryptionDeclaration(ctx context.Context, id string, buildIDs []string) (*Response, error) {
 	linkages := newPagedRelationshipDeclaration(buildIDs, "builds")
-	url := fmt.Sprintf("appStoreVersionSubmissions/%s", id)
+	url := fmt.Sprintf("v1/appStoreVersionSubmissions/%s", id)
 
 	return s.client.post(ctx, url, newRequestBody(linkages.Data), nil)
 }

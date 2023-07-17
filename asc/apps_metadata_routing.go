@@ -139,7 +139,7 @@ type GetRoutingAppCoverageQuery struct {
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_the_routing_app_coverage_information_of_an_app_store_version
 func (s *AppsService) GetRoutingAppCoverageForAppStoreVersion(ctx context.Context, id string, params *GetRoutingAppCoverageForVersionQuery) (*RoutingAppCoverageResponse, *Response, error) {
-	url := fmt.Sprintf("appStoreVersions/%s/routingAppCoverage", id)
+	url := fmt.Sprintf("v1/appStoreVersions/%s/routingAppCoverage", id)
 	res := new(RoutingAppCoverageResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -150,7 +150,7 @@ func (s *AppsService) GetRoutingAppCoverageForAppStoreVersion(ctx context.Contex
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_routing_app_coverage_information
 func (s *AppsService) GetRoutingAppCoverage(ctx context.Context, id string, params *GetRoutingAppCoverageQuery) (*RoutingAppCoverageResponse, *Response, error) {
-	url := fmt.Sprintf("routingAppCoverages/%s", id)
+	url := fmt.Sprintf("v1/routingAppCoverages/%s", id)
 	res := new(RoutingAppCoverageResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -177,7 +177,7 @@ func (s *AppsService) CreateRoutingAppCoverage(ctx context.Context, fileName str
 		Type: "routingAppCoverages",
 	}
 	res := new(RoutingAppCoverageResponse)
-	resp, err := s.client.post(ctx, "routingAppCoverages", newRequestBody(req), res)
+	resp, err := s.client.post(ctx, "v1/routingAppCoverages", newRequestBody(req), res)
 
 	return res, resp, err
 }
@@ -198,7 +198,7 @@ func (s *AppsService) CommitRoutingAppCoverage(ctx context.Context, id string, u
 		}
 	}
 
-	url := fmt.Sprintf("routingAppCoverages/%s", id)
+	url := fmt.Sprintf("v1/routingAppCoverages/%s", id)
 	res := new(RoutingAppCoverageResponse)
 	resp, err := s.client.patch(ctx, url, newRequestBody(req), res)
 
@@ -209,7 +209,7 @@ func (s *AppsService) CommitRoutingAppCoverage(ctx context.Context, id string, u
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/delete_a_routing_app_coverage
 func (s *AppsService) DeleteRoutingAppCoverage(ctx context.Context, id string) (*Response, error) {
-	url := fmt.Sprintf("routingAppCoverages/%s", id)
+	url := fmt.Sprintf("v1/routingAppCoverages/%s", id)
 
 	return s.client.delete(ctx, url, nil)
 }

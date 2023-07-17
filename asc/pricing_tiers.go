@@ -184,7 +184,7 @@ func (s *PricingService) ListAppPriceTiers(ctx context.Context, params *ListAppP
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_app_price_tier_information
 func (s *PricingService) GetAppPriceTier(ctx context.Context, id string, params *GetAppPriceTierQuery) (*AppPriceTierResponse, *Response, error) {
-	url := fmt.Sprintf("appPriceTiers/%s", id)
+	url := fmt.Sprintf("v1/appPriceTiers/%s", id)
 	res := new(AppPriceTierResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -195,7 +195,7 @@ func (s *PricingService) GetAppPriceTier(ctx context.Context, id string, params 
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/list_all_price_points_for_an_app_price_tier
 func (s *PricingService) ListPricePointsForAppPriceTier(ctx context.Context, id string, params *ListPricePointsForAppPriceTierQuery) (*AppPricePointsResponse, *Response, error) {
-	url := fmt.Sprintf("appPriceTiers/%s/pricePoints", id)
+	url := fmt.Sprintf("v1/appPriceTiers/%s/pricePoints", id)
 	res := new(AppPricePointsResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -216,7 +216,7 @@ func (s *PricingService) ListAppPricePoints(ctx context.Context, params *ListApp
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_the_territory_information_of_an_app_price_point
 func (s *PricingService) GetTerritoryForAppPricePoint(ctx context.Context, id string, params *GetTerritoryForAppPricePointQuery) (*TerritoryResponse, *Response, error) {
-	url := fmt.Sprintf("appPricePoints/%s/territory", id)
+	url := fmt.Sprintf("v1/appPricePoints/%s/territory", id)
 	res := new(TerritoryResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -227,7 +227,7 @@ func (s *PricingService) GetTerritoryForAppPricePoint(ctx context.Context, id st
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_app_price_point_information
 func (s *PricingService) GetAppPricePoint(ctx context.Context, id string, params *GetAppPricePointQuery) (*AppPricePointResponse, *Response, error) {
-	url := fmt.Sprintf("appPricePoints/%s", id)
+	url := fmt.Sprintf("v1/appPricePoints/%s", id)
 	res := new(AppPricePointResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 

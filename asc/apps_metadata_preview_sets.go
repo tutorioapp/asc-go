@@ -135,7 +135,7 @@ type ListAppPreviewIDsForSetQuery struct {
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_app_preview_set_information
 func (s *AppsService) GetAppPreviewSet(ctx context.Context, id string, params *GetAppPreviewSetQuery) (*AppPreviewSetResponse, *Response, error) {
-	url := fmt.Sprintf("appPreviewSets/%s", id)
+	url := fmt.Sprintf("v1/appPreviewSets/%s", id)
 	res := new(AppPreviewSetResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -161,7 +161,7 @@ func (s *AppsService) CreateAppPreviewSet(ctx context.Context, previewType Previ
 		Type: "appPreviewSets",
 	}
 	res := new(AppPreviewSetResponse)
-	resp, err := s.client.post(ctx, "appPreviewSets", newRequestBody(req), res)
+	resp, err := s.client.post(ctx, "v1/appPreviewSets", newRequestBody(req), res)
 
 	return res, resp, err
 }
@@ -170,7 +170,7 @@ func (s *AppsService) CreateAppPreviewSet(ctx context.Context, previewType Previ
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/delete_an_app_preview_set
 func (s *AppsService) DeleteAppPreviewSet(ctx context.Context, id string) (*Response, error) {
-	url := fmt.Sprintf("appPreviewSets/%s", id)
+	url := fmt.Sprintf("v1/appPreviewSets/%s", id)
 
 	return s.client.delete(ctx, url, nil)
 }
@@ -179,7 +179,7 @@ func (s *AppsService) DeleteAppPreviewSet(ctx context.Context, id string) (*Resp
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/list_all_app_previews_for_an_app_preview_set
 func (s *AppsService) ListAppPreviewsForSet(ctx context.Context, id string, params *ListAppPreviewsForSetQuery) (*AppPreviewsResponse, *Response, error) {
-	url := fmt.Sprintf("appPreviewSets/%s/appPreviews", id)
+	url := fmt.Sprintf("v1/appPreviewSets/%s/appPreviews", id)
 	res := new(AppPreviewsResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -190,7 +190,7 @@ func (s *AppsService) ListAppPreviewsForSet(ctx context.Context, id string, para
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/get_all_app_preview_ids_for_an_app_preview_set
 func (s *AppsService) ListAppPreviewIDsForSet(ctx context.Context, id string, params *ListAppPreviewIDsForSetQuery) (*AppPreviewSetAppPreviewsLinkagesResponse, *Response, error) {
-	url := fmt.Sprintf("appPreviewSets/%s/relationships/appPreviews", id)
+	url := fmt.Sprintf("v1/appPreviewSets/%s/relationships/appPreviews", id)
 	res := new(AppPreviewSetAppPreviewsLinkagesResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -202,7 +202,7 @@ func (s *AppsService) ListAppPreviewIDsForSet(ctx context.Context, id string, pa
 // https://developer.apple.com/documentation/appstoreconnectapi/replace_all_app_previews_for_an_app_preview_set
 func (s *AppsService) ReplaceAppPreviewsForSet(ctx context.Context, id string, appPreviewIDs []string) (*Response, error) {
 	linkages := newPagedRelationshipDeclaration(appPreviewIDs, "appPreviews")
-	url := fmt.Sprintf("appPreviewSets/%s/relationships/appPreviews", id)
+	url := fmt.Sprintf("v1/appPreviewSets/%s/relationships/appPreviews", id)
 
 	return s.client.patch(ctx, url, newRequestBody(linkages.Data), nil)
 }

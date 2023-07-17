@@ -152,7 +152,7 @@ type GetAgeRatingDeclarationForAppInfoQuery struct {
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_app_info_information
 func (s *AppsService) GetAppInfo(ctx context.Context, id string, params *GetAppInfoQuery) (*AppInfoResponse, *Response, error) {
-	url := fmt.Sprintf("appInfos/%s", id)
+	url := fmt.Sprintf("v1/appInfos/%s", id)
 	res := new(AppInfoResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -163,7 +163,7 @@ func (s *AppsService) GetAppInfo(ctx context.Context, id string, params *GetAppI
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/list_all_app_infos_for_an_app
 func (s *AppsService) ListAppInfosForApp(ctx context.Context, id string, params *ListAppInfosForAppQuery) (*AppInfosResponse, *Response, error) {
-	url := fmt.Sprintf("apps/%s/appInfos", id)
+	url := fmt.Sprintf("v1/apps/%s/appInfos", id)
 	res := new(AppInfosResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -190,7 +190,7 @@ func (s *AppsService) UpdateAppInfo(ctx context.Context, id string, relationship
 		}
 	}
 
-	url := fmt.Sprintf("appInfos/%s", id)
+	url := fmt.Sprintf("v1/appInfos/%s", id)
 	res := new(AppInfoResponse)
 	resp, err := s.client.patch(ctx, url, newRequestBody(req), res)
 
@@ -220,7 +220,7 @@ func (i *AppInfoResponseIncluded) AppCategory() *AppCategory {
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/get_v1_appinfos_id_ageratingdeclaration
 func (s *AppsService) GetAgeRatingDeclarationForAppInfo(ctx context.Context, id string, params *GetAgeRatingDeclarationForAppInfoQuery) (*AgeRatingDeclarationResponse, *Response, error) {
-	url := fmt.Sprintf("appInfos/%s/ageRatingDeclaration", id)
+	url := fmt.Sprintf("v1/appInfos/%s/ageRatingDeclaration", id)
 	res := new(AgeRatingDeclarationResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 

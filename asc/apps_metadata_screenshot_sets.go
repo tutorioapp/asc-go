@@ -192,7 +192,7 @@ type ListAppScreenshotIDsForSetQuery struct {
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_app_screenshot_set_information
 func (s *AppsService) GetAppScreenshotSet(ctx context.Context, id string, params *GetAppScreenshotSetQuery) (*AppScreenshotSetResponse, *Response, error) {
-	url := fmt.Sprintf("appScreenshotSets/%s", id)
+	url := fmt.Sprintf("v1/appScreenshotSets/%s", id)
 	res := new(AppScreenshotSetResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -218,7 +218,7 @@ func (s *AppsService) CreateAppScreenshotSet(ctx context.Context, screenshotDisp
 		Type: "appScreenshotSets",
 	}
 	res := new(AppScreenshotSetResponse)
-	resp, err := s.client.post(ctx, "appScreenshotSets", newRequestBody(req), res)
+	resp, err := s.client.post(ctx, "v1/appScreenshotSets", newRequestBody(req), res)
 
 	return res, resp, err
 }
@@ -227,7 +227,7 @@ func (s *AppsService) CreateAppScreenshotSet(ctx context.Context, screenshotDisp
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/delete_an_app_screenshot_set
 func (s *AppsService) DeleteAppScreenshotSet(ctx context.Context, id string) (*Response, error) {
-	url := fmt.Sprintf("appScreenshotSets/%s", id)
+	url := fmt.Sprintf("v1/appScreenshotSets/%s", id)
 
 	return s.client.delete(ctx, url, nil)
 }
@@ -236,7 +236,7 @@ func (s *AppsService) DeleteAppScreenshotSet(ctx context.Context, id string) (*R
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/list_all_app_screenshots_for_an_app_screenshot_set
 func (s *AppsService) ListAppScreenshotsForSet(ctx context.Context, id string, params *ListAppScreenshotsForSetQuery) (*AppScreenshotsResponse, *Response, error) {
-	url := fmt.Sprintf("appScreenshotSets/%s/appScreenshots", id)
+	url := fmt.Sprintf("v1/appScreenshotSets/%s/appScreenshots", id)
 	res := new(AppScreenshotsResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -247,7 +247,7 @@ func (s *AppsService) ListAppScreenshotsForSet(ctx context.Context, id string, p
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/get_all_app_screenshot_ids_for_an_app_screenshot_set
 func (s *AppsService) ListAppScreenshotIDsForSet(ctx context.Context, id string, params *ListAppScreenshotIDsForSetQuery) (*AppScreenshotSetAppScreenshotsLinkagesResponse, *Response, error) {
-	url := fmt.Sprintf("appScreenshotSets/%s/relationships/appScreenshots", id)
+	url := fmt.Sprintf("v1/appScreenshotSets/%s/relationships/appScreenshots", id)
 	res := new(AppScreenshotSetAppScreenshotsLinkagesResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -259,7 +259,7 @@ func (s *AppsService) ListAppScreenshotIDsForSet(ctx context.Context, id string,
 // https://developer.apple.com/documentation/appstoreconnectapi/replace_all_app_screenshots_for_an_app_screenshot_set
 func (s *AppsService) ReplaceAppScreenshotsForSet(ctx context.Context, id string, appScreenshotIDs []string) (*Response, error) {
 	linkages := newPagedRelationshipDeclaration(appScreenshotIDs, "appScreenshots")
-	url := fmt.Sprintf("appScreenshotSets/%s/relationships/appScreenshots", id)
+	url := fmt.Sprintf("v1/appScreenshotSets/%s/relationships/appScreenshots", id)
 
 	return s.client.patch(ctx, url, newRequestBody(linkages.Data), nil)
 }

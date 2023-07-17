@@ -25,6 +25,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/cenkalti/backoff/v4"
 	"io"
 	"log"
 	"net/http"
@@ -35,12 +36,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/cenkalti/backoff/v4"
 	"github.com/google/go-querystring/query"
 )
 
 const (
-	defaultBaseURL = "https://api.appstoreconnect.apple.com/v1/"
+	defaultBaseURL = "https://api.appstoreconnect.apple.com/"
 	userAgent      = "asc-go"
 	defaultTimeout = 30 * time.Second
 

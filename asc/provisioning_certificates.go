@@ -156,7 +156,7 @@ func (s *ProvisioningService) CreateCertificate(ctx context.Context, certificate
 		Type: "certificates",
 	}
 	res := new(CertificateResponse)
-	resp, err := s.client.post(ctx, "certificates", newRequestBody(req), res)
+	resp, err := s.client.post(ctx, "v1/certificates", newRequestBody(req), res)
 
 	return res, resp, err
 }
@@ -175,7 +175,7 @@ func (s *ProvisioningService) ListCertificates(ctx context.Context, params *List
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_and_download_certificate_information
 func (s *ProvisioningService) GetCertificate(ctx context.Context, id string, params *GetCertificateQuery) (*CertificateResponse, *Response, error) {
-	url := fmt.Sprintf("certificates/%s", id)
+	url := fmt.Sprintf("v1/certificates/%s", id)
 	res := new(CertificateResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -186,7 +186,7 @@ func (s *ProvisioningService) GetCertificate(ctx context.Context, id string, par
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/revoke_a_certificate
 func (s *ProvisioningService) RevokeCertificate(ctx context.Context, id string) (*Response, error) {
-	url := fmt.Sprintf("certificates/%s", id)
+	url := fmt.Sprintf("v1/certificates/%s", id)
 
 	return s.client.delete(ctx, url, nil)
 }

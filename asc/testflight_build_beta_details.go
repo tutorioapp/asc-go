@@ -191,7 +191,7 @@ func (s *TestflightService) ListBuildBetaDetails(ctx context.Context, params *Li
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_build_beta_detail_information
 func (s *TestflightService) GetBuildBetaDetail(ctx context.Context, id string, params *GetBuildBetaDetailsQuery) (*BuildBetaDetailResponse, *Response, error) {
-	url := fmt.Sprintf("buildBetaDetails/%s", id)
+	url := fmt.Sprintf("v1/buildBetaDetails/%s", id)
 	res := new(BuildBetaDetailResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -202,7 +202,7 @@ func (s *TestflightService) GetBuildBetaDetail(ctx context.Context, id string, p
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_the_build_information_of_a_build_beta_detail
 func (s *TestflightService) GetBuildForBuildBetaDetail(ctx context.Context, id string, params *GetBuildForBuildBetaDetailQuery) (*BuildResponse, *Response, error) {
-	url := fmt.Sprintf("buildBetaDetails/%s/build", id)
+	url := fmt.Sprintf("v1/buildBetaDetails/%s/build", id)
 	res := new(BuildResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -213,7 +213,7 @@ func (s *TestflightService) GetBuildForBuildBetaDetail(ctx context.Context, id s
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_the_build_beta_details_information_of_a_build
 func (s *TestflightService) GetBuildBetaDetailForBuild(ctx context.Context, id string, params *GetBuildBetaDetailForBuildQuery) (*BuildBetaDetailResponse, *Response, error) {
-	url := fmt.Sprintf("builds/%s/buildBetaDetail", id)
+	url := fmt.Sprintf("v1/builds/%s/buildBetaDetail", id)
 	res := new(BuildBetaDetailResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -235,7 +235,7 @@ func (s *TestflightService) UpdateBuildBetaDetail(ctx context.Context, id string
 		}
 	}
 
-	url := fmt.Sprintf("buildBetaDetails/%s", id)
+	url := fmt.Sprintf("v1/buildBetaDetails/%s", id)
 	res := new(BuildBetaDetailResponse)
 	resp, err := s.client.patch(ctx, url, newRequestBody(req), res)
 

@@ -188,7 +188,7 @@ func (s *ProvisioningService) CreateProfile(ctx context.Context, name string, pr
 	}
 
 	res := new(ProfileResponse)
-	resp, err := s.client.post(ctx, "profiles", newRequestBody(req), res)
+	resp, err := s.client.post(ctx, "v1/profiles", newRequestBody(req), res)
 
 	return res, resp, err
 }
@@ -197,7 +197,7 @@ func (s *ProvisioningService) CreateProfile(ctx context.Context, name string, pr
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/delete_a_profile
 func (s *ProvisioningService) DeleteProfile(ctx context.Context, id string) (*Response, error) {
-	url := fmt.Sprintf("profiles/%s", id)
+	url := fmt.Sprintf("v1/profiles/%s", id)
 
 	return s.client.delete(ctx, url, nil)
 }
@@ -216,7 +216,7 @@ func (s *ProvisioningService) ListProfiles(ctx context.Context, params *ListProf
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_and_download_profile_information
 func (s *ProvisioningService) GetProfile(ctx context.Context, id string, params *GetProfileQuery) (*ProfileResponse, *Response, error) {
-	url := fmt.Sprintf("profiles/%s", id)
+	url := fmt.Sprintf("v1/profiles/%s", id)
 	res := new(ProfileResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -227,7 +227,7 @@ func (s *ProvisioningService) GetProfile(ctx context.Context, id string, params 
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_the_bundle_id_in_a_profile
 func (s *ProvisioningService) GetBundleIDForProfile(ctx context.Context, id string, params *GetBundleIDForProfileQuery) (*BundleIDResponse, *Response, error) {
-	url := fmt.Sprintf("profiles/%s/bundleId", id)
+	url := fmt.Sprintf("v1/profiles/%s/bundleId", id)
 	res := new(BundleIDResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -238,7 +238,7 @@ func (s *ProvisioningService) GetBundleIDForProfile(ctx context.Context, id stri
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/list_all_certificates_in_a_profile
 func (s *ProvisioningService) ListCertificatesInProfile(ctx context.Context, id string, params *ListCertificatesForProfileQuery) (*CertificatesResponse, *Response, error) {
-	url := fmt.Sprintf("profiles/%s/certificates", id)
+	url := fmt.Sprintf("v1/profiles/%s/certificates", id)
 	res := new(CertificatesResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -249,7 +249,7 @@ func (s *ProvisioningService) ListCertificatesInProfile(ctx context.Context, id 
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/list_all_devices_in_a_profile
 func (s *ProvisioningService) ListDevicesInProfile(ctx context.Context, id string, params *ListDevicesInProfileQuery) (*DevicesResponse, *Response, error) {
-	url := fmt.Sprintf("profiles/%s/devices", id)
+	url := fmt.Sprintf("v1/profiles/%s/devices", id)
 	res := new(DevicesResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 

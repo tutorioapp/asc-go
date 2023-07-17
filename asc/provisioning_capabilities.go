@@ -211,7 +211,7 @@ func (s *ProvisioningService) EnableCapability(ctx context.Context, capabilityTy
 		Type: "bundleIdCapabilities",
 	}
 	res := new(BundleIDCapabilityResponse)
-	resp, err := s.client.patch(ctx, "bundleIdCapabilities", newRequestBody(req), res)
+	resp, err := s.client.patch(ctx, "v1/bundleIdCapabilities", newRequestBody(req), res)
 
 	return res, resp, err
 }
@@ -220,7 +220,7 @@ func (s *ProvisioningService) EnableCapability(ctx context.Context, capabilityTy
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/disable_a_capability
 func (s *ProvisioningService) DisableCapability(ctx context.Context, id string) (*Response, error) {
-	url := fmt.Sprintf("bundleIdCapabilities/%s", id)
+	url := fmt.Sprintf("v1/bundleIdCapabilities/%s", id)
 
 	return s.client.delete(ctx, url, nil)
 }
@@ -241,7 +241,7 @@ func (s *ProvisioningService) UpdateCapability(ctx context.Context, id string, c
 		}
 	}
 
-	url := fmt.Sprintf("bundleIdCapabilities/%s", id)
+	url := fmt.Sprintf("v1/bundleIdCapabilities/%s", id)
 	res := new(BundleIDCapabilityResponse)
 	resp, err := s.client.patch(ctx, url, newRequestBody(req), res)
 

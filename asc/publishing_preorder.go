@@ -115,7 +115,7 @@ type GetPreOrderForAppQuery struct {
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_app_pre-order_information
 func (s *PublishingService) GetPreOrder(ctx context.Context, id string, params *GetPreOrderQuery) (*AppPreOrderResponse, *Response, error) {
-	url := fmt.Sprintf("appPreOrders/%s", id)
+	url := fmt.Sprintf("v1/appPreOrders/%s", id)
 	res := new(AppPreOrderResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -126,7 +126,7 @@ func (s *PublishingService) GetPreOrder(ctx context.Context, id string, params *
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_the_pre-order_information_of_an_app
 func (s *PublishingService) GetPreOrderForApp(ctx context.Context, id string, params *GetPreOrderForAppQuery) (*AppPreOrderResponse, *Response, error) {
-	url := fmt.Sprintf("apps/%s/preOrder", id)
+	url := fmt.Sprintf("v1/apps/%s/preOrder", id)
 	res := new(AppPreOrderResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -156,7 +156,7 @@ func (s *PublishingService) CreatePreOrder(ctx context.Context, appReleaseDate *
 	}
 
 	res := new(AppPreOrderResponse)
-	resp, err := s.client.post(ctx, "appPreOrders", newRequestBody(req), res)
+	resp, err := s.client.post(ctx, "v1/appPreOrders", newRequestBody(req), res)
 
 	return res, resp, err
 }
@@ -176,7 +176,7 @@ func (s *PublishingService) UpdatePreOrder(ctx context.Context, id string, appRe
 		}
 	}
 
-	url := fmt.Sprintf("appPreOrders/%s", id)
+	url := fmt.Sprintf("v1/appPreOrders/%s", id)
 	res := new(AppPreOrderResponse)
 	resp, err := s.client.patch(ctx, url, newRequestBody(req), res)
 
@@ -187,7 +187,7 @@ func (s *PublishingService) UpdatePreOrder(ctx context.Context, id string, appRe
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/delete_an_app_pre-order
 func (s *PublishingService) DeletePreOrder(ctx context.Context, id string) (*Response, error) {
-	url := fmt.Sprintf("appPreOrders/%s", id)
+	url := fmt.Sprintf("v1/appPreOrders/%s", id)
 
 	return s.client.delete(ctx, url, nil)
 }

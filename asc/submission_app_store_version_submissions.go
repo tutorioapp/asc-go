@@ -90,7 +90,7 @@ func (s *SubmissionService) CreateSubmission(ctx context.Context, appStoreVersio
 		Type: "appStoreVersionSubmissions",
 	}
 	res := new(AppStoreVersionSubmissionResponse)
-	resp, err := s.client.post(ctx, "appStoreVersionSubmissions", newRequestBody(req), res)
+	resp, err := s.client.post(ctx, "v1/appStoreVersionSubmissions", newRequestBody(req), res)
 
 	return res, resp, err
 }
@@ -99,7 +99,7 @@ func (s *SubmissionService) CreateSubmission(ctx context.Context, appStoreVersio
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/delete_an_app_store_version_submission
 func (s *SubmissionService) DeleteSubmission(ctx context.Context, id string) (*Response, error) {
-	url := fmt.Sprintf("appStoreVersionSubmissions/%s", id)
+	url := fmt.Sprintf("v1/appStoreVersionSubmissions/%s", id)
 
 	return s.client.delete(ctx, url, nil)
 }
@@ -108,7 +108,7 @@ func (s *SubmissionService) DeleteSubmission(ctx context.Context, id string) (*R
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_the_app_store_version_submission_information_of_an_app_store_version
 func (s *SubmissionService) GetAppStoreVersionSubmissionForAppStoreVersion(ctx context.Context, id string, params *GetAppStoreVersionSubmissionForAppStoreVersionQuery) (*AppStoreVersionSubmissionResponse, *Response, error) {
-	url := fmt.Sprintf("appStoreVersions/%s/appStoreVersionSubmission", id)
+	url := fmt.Sprintf("v1/appStoreVersions/%s/appStoreVersionSubmission", id)
 	res := new(AppStoreVersionSubmissionResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 

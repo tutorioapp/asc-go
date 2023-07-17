@@ -91,7 +91,7 @@ type GetPriceQuery struct {
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/list_all_prices_for_an_app
 func (s *PricingService) ListPricesForApp(ctx context.Context, id string, params *ListPricesQuery) (*AppPricesResponse, *Response, error) {
-	url := fmt.Sprintf("apps/%s/prices", id)
+	url := fmt.Sprintf("v1/apps/%s/prices", id)
 	res := new(AppPricesResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -102,7 +102,7 @@ func (s *PricingService) ListPricesForApp(ctx context.Context, id string, params
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_app_price_information
 func (s *PricingService) GetPrice(ctx context.Context, id string, params *GetPriceQuery) (*AppPriceResponse, *Response, error) {
-	url := fmt.Sprintf("appPrices/%s", id)
+	url := fmt.Sprintf("v1/appPrices/%s", id)
 	res := new(AppPriceResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 

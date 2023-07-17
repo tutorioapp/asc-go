@@ -134,7 +134,7 @@ func (s *ProvisioningService) CreateDevice(ctx context.Context, name string, udi
 		Type: "devices",
 	}
 	res := new(DeviceResponse)
-	resp, err := s.client.post(ctx, "devices", newRequestBody(req), res)
+	resp, err := s.client.post(ctx, "v1/devices", newRequestBody(req), res)
 
 	return res, resp, err
 }
@@ -153,7 +153,7 @@ func (s *ProvisioningService) ListDevices(ctx context.Context, params *ListDevic
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_device_information
 func (s *ProvisioningService) GetDevice(ctx context.Context, id string, params *GetDeviceQuery) (*DeviceResponse, *Response, error) {
-	url := fmt.Sprintf("devices/%s", id)
+	url := fmt.Sprintf("v1/devices/%s", id)
 	res := new(DeviceResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -176,7 +176,7 @@ func (s *ProvisioningService) UpdateDevice(ctx context.Context, id string, name 
 		}
 	}
 
-	url := fmt.Sprintf("devices/%s", id)
+	url := fmt.Sprintf("v1/devices/%s", id)
 	res := new(DeviceResponse)
 	resp, err := s.client.patch(ctx, url, newRequestBody(req), res)
 

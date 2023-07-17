@@ -148,7 +148,7 @@ func (s *TestflightService) ListBetaAppReviewDetails(ctx context.Context, params
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_beta_app_review_detail_information
 func (s *TestflightService) GetBetaAppReviewDetail(ctx context.Context, id string, params *GetBetaAppReviewDetailQuery) (*BetaAppReviewDetailResponse, *Response, error) {
-	url := fmt.Sprintf("betaAppReviewDetails/%s", id)
+	url := fmt.Sprintf("v1/betaAppReviewDetails/%s", id)
 	res := new(BetaAppReviewDetailResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -159,7 +159,7 @@ func (s *TestflightService) GetBetaAppReviewDetail(ctx context.Context, id strin
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_the_app_information_of_a_beta_app_review_detail
 func (s *TestflightService) GetAppForBetaAppReviewDetail(ctx context.Context, id string, params *GetAppForBetaAppReviewDetailQuery) (*AppResponse, *Response, error) {
-	url := fmt.Sprintf("betaAppReviewDetails/%s/app", id)
+	url := fmt.Sprintf("v1/betaAppReviewDetails/%s/app", id)
 	res := new(AppResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -170,7 +170,7 @@ func (s *TestflightService) GetAppForBetaAppReviewDetail(ctx context.Context, id
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_the_beta_app_review_details_resource_of_an_app
 func (s *TestflightService) GetBetaAppReviewDetailsForApp(ctx context.Context, id string, params *GetBetaAppReviewDetailsForAppQuery) (*BetaAppReviewDetailResponse, *Response, error) {
-	url := fmt.Sprintf("apps/%s/betaAppReviewDetail", id)
+	url := fmt.Sprintf("v1/apps/%s/betaAppReviewDetail", id)
 	res := new(BetaAppReviewDetailResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -186,7 +186,7 @@ func (s *TestflightService) UpdateBetaAppReviewDetail(ctx context.Context, id st
 		ID:         id,
 		Type:       "betaAppReviewDetails",
 	}
-	url := fmt.Sprintf("betaAppReviewDetails/%s", id)
+	url := fmt.Sprintf("v1/betaAppReviewDetails/%s", id)
 	res := new(BetaAppReviewDetailResponse)
 	resp, err := s.client.patch(ctx, url, newRequestBody(req), res)
 

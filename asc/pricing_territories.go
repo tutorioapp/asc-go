@@ -85,7 +85,7 @@ func (s *PricingService) ListTerritories(ctx context.Context, params *ListTerrit
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/list_all_available_territories_for_an_app
 func (s *PricingService) ListTerritoriesForApp(ctx context.Context, id string, params *ListTerritoriesQuery) (*TerritoriesResponse, *Response, error) {
-	url := fmt.Sprintf("apps/%s/availableTerritories", id)
+	url := fmt.Sprintf("v1/apps/%s/availableTerritories", id)
 	res := new(TerritoriesResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -96,7 +96,7 @@ func (s *PricingService) ListTerritoriesForApp(ctx context.Context, id string, p
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/list_all_territories_for_an_end_user_license_agreement
 func (s *PricingService) ListTerritoriesForEULA(ctx context.Context, id string, params *ListTerritoriesQuery) (*TerritoriesResponse, *Response, error) {
-	url := fmt.Sprintf("endUserLicenseAgreements/%s/territories", id)
+	url := fmt.Sprintf("v1/endUserLicenseAgreements/%s/territories", id)
 	res := new(TerritoriesResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -107,7 +107,7 @@ func (s *PricingService) ListTerritoriesForEULA(ctx context.Context, id string, 
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_the_territory_information_of_an_app_price_point
 func (s *PricingService) GetTerritoryForAppPrice(ctx context.Context, id string, params *ListTerritoriesQuery) (*TerritoryResponse, *Response, error) {
-	url := fmt.Sprintf("appPricePoints/%s/territory", id)
+	url := fmt.Sprintf("v1/appPricePoints/%s/territory", id)
 	res := new(TerritoryResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 

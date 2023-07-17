@@ -270,7 +270,7 @@ type GetAppStoreVersionQuery struct {
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/list_all_app_store_versions_for_an_app
 func (s *AppsService) ListAppStoreVersionsForApp(ctx context.Context, id string, params *ListAppStoreVersionsQuery) (*AppStoreVersionsResponse, *Response, error) {
-	url := fmt.Sprintf("apps/%s/appStoreVersions", id)
+	url := fmt.Sprintf("v1/apps/%s/appStoreVersions", id)
 	res := new(AppStoreVersionsResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -281,7 +281,7 @@ func (s *AppsService) ListAppStoreVersionsForApp(ctx context.Context, id string,
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_app_store_version_information
 func (s *AppsService) GetAppStoreVersion(ctx context.Context, id string, params *GetAppStoreVersionQuery) (*AppStoreVersionResponse, *Response, error) {
-	url := fmt.Sprintf("appStoreVersions/%s", id)
+	url := fmt.Sprintf("v1/appStoreVersions/%s", id)
 	res := new(AppStoreVersionResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -305,7 +305,7 @@ func (s *AppsService) CreateAppStoreVersion(ctx context.Context, attributes AppS
 	}
 
 	res := new(AppStoreVersionResponse)
-	resp, err := s.client.post(ctx, "appStoreVersions", newRequestBody(req), res)
+	resp, err := s.client.post(ctx, "v1/appStoreVersions", newRequestBody(req), res)
 
 	return res, resp, err
 }
@@ -326,7 +326,7 @@ func (s *AppsService) UpdateAppStoreVersion(ctx context.Context, id string, attr
 		}
 	}
 
-	url := fmt.Sprintf("appStoreVersions/%s", id)
+	url := fmt.Sprintf("v1/appStoreVersions/%s", id)
 	res := new(AppStoreVersionResponse)
 	resp, err := s.client.patch(ctx, url, newRequestBody(req), res)
 
@@ -337,7 +337,7 @@ func (s *AppsService) UpdateAppStoreVersion(ctx context.Context, id string, attr
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/delete_an_app_store_version
 func (s *AppsService) DeleteAppStoreVersion(ctx context.Context, id string) (*Response, error) {
-	url := fmt.Sprintf("appStoreVersions/%s", id)
+	url := fmt.Sprintf("v1/appStoreVersions/%s", id)
 
 	return s.client.delete(ctx, url, nil)
 }
@@ -346,7 +346,7 @@ func (s *AppsService) DeleteAppStoreVersion(ctx context.Context, id string) (*Re
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/get_the_build_id_for_an_app_store_version
 func (s *AppsService) GetBuildIDForAppStoreVersion(ctx context.Context, id string) (*AppStoreVersionBuildLinkageResponse, *Response, error) {
-	url := fmt.Sprintf("appStoreVersions/%s/relationships/build", id)
+	url := fmt.Sprintf("v1/appStoreVersions/%s/relationships/build", id)
 	res := new(AppStoreVersionBuildLinkageResponse)
 	resp, err := s.client.get(ctx, url, nil, res)
 
@@ -358,7 +358,7 @@ func (s *AppsService) GetBuildIDForAppStoreVersion(ctx context.Context, id strin
 // https://developer.apple.com/documentation/appstoreconnectapi/modify_the_build_for_an_app_store_version
 func (s *AppsService) UpdateBuildForAppStoreVersion(ctx context.Context, id string, buildID *string) (*AppStoreVersionBuildLinkageResponse, *Response, error) {
 	linkage := newRelationshipDeclaration(buildID, "builds")
-	url := fmt.Sprintf("appStoreVersions/%s/relationships/build", id)
+	url := fmt.Sprintf("v1/appStoreVersions/%s/relationships/build", id)
 	res := new(AppStoreVersionBuildLinkageResponse)
 	resp, err := s.client.patch(ctx, url, newRequestBody(linkage), res)
 

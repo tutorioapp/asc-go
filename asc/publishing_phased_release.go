@@ -138,7 +138,7 @@ func (s *PublishingService) CreatePhasedRelease(ctx context.Context, phasedRelea
 	}
 
 	res := new(AppStoreVersionPhasedReleaseResponse)
-	resp, err := s.client.post(ctx, "appStoreVersionPhasedReleases", newRequestBody(req), res)
+	resp, err := s.client.post(ctx, "v1/appStoreVersionPhasedReleases", newRequestBody(req), res)
 
 	return res, resp, err
 }
@@ -158,7 +158,7 @@ func (s *PublishingService) UpdatePhasedRelease(ctx context.Context, id string, 
 		}
 	}
 
-	url := fmt.Sprintf("appStoreVersionPhasedReleases/%s", id)
+	url := fmt.Sprintf("v1/appStoreVersionPhasedReleases/%s", id)
 	res := new(AppStoreVersionPhasedReleaseResponse)
 	resp, err := s.client.patch(ctx, url, newRequestBody(req), res)
 
@@ -169,7 +169,7 @@ func (s *PublishingService) UpdatePhasedRelease(ctx context.Context, id string, 
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/delete_an_app_store_version_phased_release
 func (s *PublishingService) DeletePhasedRelease(ctx context.Context, id string) (*Response, error) {
-	url := fmt.Sprintf("appStoreVersionPhasedReleases/%s", id)
+	url := fmt.Sprintf("v1/appStoreVersionPhasedReleases/%s", id)
 
 	return s.client.delete(ctx, url, nil)
 }
@@ -178,7 +178,7 @@ func (s *PublishingService) DeletePhasedRelease(ctx context.Context, id string) 
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_the_app_store_version_phased_release_information_of_an_app_store_version
 func (s *PublishingService) GetAppStoreVersionPhasedReleaseForAppStoreVersion(ctx context.Context, id string, params *GetAppStoreVersionPhasedReleaseForAppStoreVersionQuery) (*AppStoreVersionPhasedReleaseResponse, *Response, error) {
-	url := fmt.Sprintf("appStoreVersions/%s/appStoreVersionPhasedRelease", id)
+	url := fmt.Sprintf("v1/appStoreVersions/%s/appStoreVersionPhasedRelease", id)
 	res := new(AppStoreVersionPhasedReleaseResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 

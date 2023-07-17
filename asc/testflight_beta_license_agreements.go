@@ -134,7 +134,7 @@ func (s *TestflightService) ListBetaLicenseAgreements(ctx context.Context, param
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_beta_license_agreement_information
 func (s *TestflightService) GetBetaLicenseAgreement(ctx context.Context, id string, params *GetBetaLicenseAgreementQuery) (*BetaLicenseAgreementResponse, *Response, error) {
-	url := fmt.Sprintf("betaLicenseAgreements/%s", id)
+	url := fmt.Sprintf("v1/betaLicenseAgreements/%s", id)
 	res := new(BetaLicenseAgreementResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -145,7 +145,7 @@ func (s *TestflightService) GetBetaLicenseAgreement(ctx context.Context, id stri
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_the_app_information_of_a_beta_license_agreement
 func (s *TestflightService) GetAppForBetaLicenseAgreement(ctx context.Context, id string, params *GetAppForBetaLicenseAgreementQuery) (*AppResponse, *Response, error) {
-	url := fmt.Sprintf("betaLicenseAgreements/%s/app", id)
+	url := fmt.Sprintf("v1/betaLicenseAgreements/%s/app", id)
 	res := new(AppResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -156,7 +156,7 @@ func (s *TestflightService) GetAppForBetaLicenseAgreement(ctx context.Context, i
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_the_beta_license_agreement_of_an_app
 func (s *TestflightService) GetBetaLicenseAgreementForApp(ctx context.Context, id string, params *GetBetaLicenseAgreementForAppQuery) (*BetaLicenseAgreementResponse, *Response, error) {
-	url := fmt.Sprintf("apps/%s/betaLicenseAgreement", id)
+	url := fmt.Sprintf("v1/apps/%s/betaLicenseAgreement", id)
 	res := new(BetaLicenseAgreementResponse)
 	resp, err := s.client.get(ctx, url, params, res)
 
@@ -178,7 +178,7 @@ func (s *TestflightService) UpdateBetaLicenseAgreement(ctx context.Context, id s
 		}
 	}
 
-	url := fmt.Sprintf("betaLicenseAgreements/%s", id)
+	url := fmt.Sprintf("v1/betaLicenseAgreements/%s", id)
 	res := new(BetaLicenseAgreementResponse)
 	resp, err := s.client.patch(ctx, url, newRequestBody(req), res)
 

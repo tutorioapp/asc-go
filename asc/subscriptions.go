@@ -89,10 +89,29 @@ type SubscriptionLocalizationResponse struct {
 	Links DocumentLinks            `json:"links"`
 }
 
+type SubscriptionGroupLocalization struct {
+	Attributes    SubscriptionGroupLocalizationAttributes `json:"attributes"`
+	ID            string                                  `json:"id"`
+	Links         ResourceLinks                           `json:"links"`
+	Relationships any                                     `json:"relationships"`
+	Type          string                                  `json:"type"`
+}
+
+type SubscriptionGroupLocalizationResponse struct {
+	Data  SubscriptionGroupLocalization `json:"data"`
+	Links DocumentLinks                 `json:"links"`
+}
+
 type SubscriptionLocalizationAttributes struct {
 	Locale      string `json:"locale"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
+}
+
+type SubscriptionGroupLocalizationAttributes struct {
+	Locale        string `json:"locale"`
+	CustomAppName string `json:"customAppName"`
+	Name          string `json:"name"`
 }
 
 // SubscriptionLocalizationData defines model for SubscriptionLocalizationCreateRequest.Data
@@ -104,6 +123,19 @@ type SubscriptionLocalizationData struct {
 		App struct {
 			Data *RelationshipData `json:"data"`
 		} `json:"subscription"`
+	} `json:"relationships"`
+	Type string `json:"type"`
+}
+
+// SubscriptionGroupLocalizationData defines model for SubscriptionGroupLocalizationCreateRequest.Data
+//
+// https://developer.apple.com/documentation/appstoreconnectapi/subscriptiongrouplocalizationcreaterequest/data
+type SubscriptionGroupLocalizationData struct {
+	Attributes    SubscriptionGroupLocalizationAttributes `json:"attributes"`
+	Relationships struct {
+		App struct {
+			Data *RelationshipData `json:"data"`
+		} `json:"subscriptionGroup"`
 	} `json:"relationships"`
 	Type string `json:"type"`
 }
@@ -125,6 +157,31 @@ func (s *SubscriptionsService) CreateSubscriptionGroup(ctx context.Context, appI
 			}{Data: &RelationshipData{ID: appID, Type: "apps"}},
 		},
 		Type: "subscriptionGroups",
+	}), res)
+	return res, resp, err
+}
+
+// CreateSubscriptionGroupLocalization creates a subscription group localization.
+//
+// https://developer.apple.com/documentation/appstoreconnectapi/create_a_subscription_group_localization
+func (s *SubscriptionsService) CreateSubscriptionGroupLocalization(ctx context.Context, groupID, locale, appName, groupName string) (*SubscriptionGroupLocalizationResponse, *Response, error) {
+	res := new(SubscriptionGroupLocalizationResponse)
+	resp, err := s.client.post(ctx, "v1/subscriptionLocalizations", newRequestBody(SubscriptionGroupLocalizationData{
+		Attributes: SubscriptionGroupLocalizationAttributes{
+			Locale:        locale,
+			Name:          groupName,
+			CustomAppName: appName,
+		},
+		Relationships: struct {
+			App struct {
+				Data *RelationshipData `json:"data"`
+			} `json:"subscriptionGroup"`
+		}{
+			App: struct {
+				Data *RelationshipData `json:"data"`
+			}{Data: &RelationshipData{ID: groupID, Type: "subscriptionGroups"}},
+		},
+		Type: "subscriptionGroupLocalizations",
 	}), res)
 	return res, resp, err
 }

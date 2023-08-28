@@ -26,7 +26,9 @@ type SubscriptionGroupData struct {
 type SubscriptionData struct {
 	Attributes    SubscriptionAttributes `json:"attributes"`
 	Relationships struct {
-		Group string `json:"group"`
+		App struct {
+			Data *RelationshipData `json:"data"`
+		} `json:"group"`
 	} `json:"relationships"`
 	Type string `json:"type"`
 }
@@ -122,8 +124,14 @@ func (s *SubscriptionsService) CreateSubscription(ctx context.Context, name, pro
 			GroupLevel:                1,
 		},
 		Relationships: struct {
-			Group string `json:"group"`
-		}{Group: groupID},
+			App struct {
+				Data *RelationshipData `json:"data"`
+			} `json:"group"`
+		}{
+			App: struct {
+				Data *RelationshipData `json:"data"`
+			}{Data: &RelationshipData{ID: groupID, Type: "subscriptionGroups"}},
+		},
 		Type: "subscriptions",
 	}), res)
 	return res, resp, err

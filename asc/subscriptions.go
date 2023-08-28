@@ -44,7 +44,7 @@ type SubscriptionAttributes struct {
 	FamilySharable            bool   `json:"familySharable"`
 	Name                      string `json:"name"`
 	ProductID                 string `json:"productId"`
-	ReviewNode                string `json:"reviewNode"`
+	ReviewNotes               string `json:"reviewNote"`
 	SubscriptionPeriod        string `json:"subscriptionPeriod"`
 	GroupLevel                int    `json:"groupLevel"`
 }
@@ -119,7 +119,7 @@ func (s *SubscriptionsService) CreateSubscription(ctx context.Context, name, pro
 			FamilySharable:            false,
 			Name:                      name,
 			ProductID:                 productID,
-			ReviewNode:                reviewNotes,
+			ReviewNotes:               reviewNotes,
 			SubscriptionPeriod:        string(period),
 			GroupLevel:                1,
 		},

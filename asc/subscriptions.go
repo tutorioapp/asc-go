@@ -76,6 +76,38 @@ type SubscriptionResponse struct {
 	Links DocumentLinks `json:"links"`
 }
 
+type SubscriptionLocalization struct {
+	Attributes    SubscriptionLocalizationAttributes `json:"attributes"`
+	ID            string                             `json:"id"`
+	Links         ResourceLinks                      `json:"links"`
+	Relationships any                                `json:"relationships"`
+	Type          string                             `json:"type"`
+}
+
+type SubscriptionLocalizationResponse struct {
+	Data  SubscriptionLocalization `json:"data"`
+	Links DocumentLinks            `json:"links"`
+}
+
+type SubscriptionLocalizationAttributes struct {
+	Locale      string `json:"locale"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}
+
+// SubscriptionLocalizationData defines model for SubscriptionLocalizationCreateRequest.Data
+//
+// https://developer.apple.com/documentation/appstoreconnectapi/subscriptionlocalizationcreaterequest/data
+type SubscriptionLocalizationData struct {
+	Attributes    SubscriptionLocalizationAttributes `json:"attributes"`
+	Relationships struct {
+		App struct {
+			Data *RelationshipData `json:"data"`
+		} `json:"subscription"`
+	} `json:"relationships"`
+	Type string `json:"type"`
+}
+
 // CreateSubscriptionGroup creates a subscription group for an app.
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/create_a_subscription_group
@@ -133,6 +165,31 @@ func (s *SubscriptionsService) CreateSubscription(ctx context.Context, name, pro
 			}{Data: &RelationshipData{ID: groupID, Type: "subscriptionGroups"}},
 		},
 		Type: "subscriptions",
+	}), res)
+	return res, resp, err
+}
+
+// CreateSubscriptionLocalization creates a subscription localization.
+//
+// https://developer.apple.com/documentation/appstoreconnectapi/create_a_subscription_localization
+func (s *SubscriptionsService) CreateSubscriptionLocalization(ctx context.Context, subscriptionID, locale, name, description string) (*SubscriptionLocalizationResponse, *Response, error) {
+	res := new(SubscriptionLocalizationResponse)
+	resp, err := s.client.post(ctx, "v1/subscriptionLocalizations", newRequestBody(SubscriptionLocalizationData{
+		Attributes: SubscriptionLocalizationAttributes{
+			Locale:      locale,
+			Name:        name,
+			Description: description,
+		},
+		Relationships: struct {
+			App struct {
+				Data *RelationshipData `json:"data"`
+			} `json:"subscription"`
+		}{
+			App: struct {
+				Data *RelationshipData `json:"data"`
+			}{Data: &RelationshipData{ID: subscriptionID, Type: "subscriptions"}},
+		},
+		Type: "subscriptionLocalizations",
 	}), res)
 	return res, resp, err
 }

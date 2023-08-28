@@ -136,3 +136,12 @@ func (s *SubscriptionsService) CreateSubscription(ctx context.Context, name, pro
 	}), res)
 	return res, resp, err
 }
+
+// GetSubscription returns the subscription for a given subscription ID.
+//
+// https://developer.apple.com/documentation/appstoreconnectapi/read_subscription_information
+func (s *SubscriptionsService) GetSubscription(ctx context.Context, id string) (*SubscriptionResponse, *Response, error) {
+	res := new(SubscriptionResponse)
+	resp, err := s.client.get(ctx, "v1/subscriptions/"+id, nil, res)
+	return res, resp, err
+}

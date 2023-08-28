@@ -166,7 +166,7 @@ func (s *SubscriptionsService) CreateSubscriptionGroup(ctx context.Context, appI
 // https://developer.apple.com/documentation/appstoreconnectapi/create_a_subscription_group_localization
 func (s *SubscriptionsService) CreateSubscriptionGroupLocalization(ctx context.Context, groupID, locale, appName, groupName string) (*SubscriptionGroupLocalizationResponse, *Response, error) {
 	res := new(SubscriptionGroupLocalizationResponse)
-	resp, err := s.client.post(ctx, "v1/subscriptionLocalizations", newRequestBody(SubscriptionGroupLocalizationData{
+	resp, err := s.client.post(ctx, "v1/subscriptionGroupLocalizations", newRequestBody(SubscriptionGroupLocalizationData{
 		Attributes: SubscriptionGroupLocalizationAttributes{
 			Locale:        locale,
 			Name:          groupName,

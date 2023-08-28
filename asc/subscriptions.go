@@ -1,6 +1,9 @@
 package asc
 
-import "context"
+import (
+	"context"
+	"net/url"
+)
 
 // SubscriptionsService handles communication with methods related to Auto-Renewable Subscriptions
 //
@@ -91,8 +94,8 @@ type SubscriptionPricePoint struct {
 }
 
 type SubscriptionPricePointsResponse struct {
-	Data  SubscriptionPricePoint `json:"data"`
-	Links DocumentLinks          `json:"links"`
+	Data  []SubscriptionPricePoint `json:"data"`
+	Links DocumentLinks            `json:"links"`
 }
 
 type SubscriptionLocalization struct {
@@ -282,8 +285,8 @@ func (s *SubscriptionsService) GetSubscription(ctx context.Context, id string) (
 // GetSubscriptionPricePoints returns a list of approved prices apple will allow you to set for a subscription.
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_subscription_price_point_information
-func (s *SubscriptionsService) GetSubscriptionPricePoints(ctx context.Context, id string) (*SubscriptionPricePointsResponse, *Response, error) {
+func (s *SubscriptionsService) GetSubscriptionPricePoints(ctx context.Context, id, territory string) (*SubscriptionPricePointsResponse, *Response, error) {
 	res := new(SubscriptionPricePointsResponse)
-	resp, err := s.client.get(ctx, "v1/subscriptionPricePoints/"+id, nil, res)
+	resp, err := s.client.get(ctx, "v1/subscriptions/"+id+"/pricePoints?include=territory&filter[territory]="+url.QueryEscape(territory), nil, res)
 	return res, resp, err
 }

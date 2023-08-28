@@ -76,6 +76,25 @@ type SubscriptionResponse struct {
 	Links DocumentLinks `json:"links"`
 }
 
+type SubscriptionPricePointAttributes struct {
+	CustomerPrice string `json:"customerPrice"`
+	Proceeds      string `json:"proceeds"`
+	ProceedsYear2 string `json:"proceedsYear2"`
+}
+
+type SubscriptionPricePoint struct {
+	Attributes    SubscriptionPricePointAttributes `json:"attributes"`
+	ID            string                           `json:"id"`
+	Links         ResourceLinks                    `json:"links"`
+	Relationships any                              `json:"relationships"`
+	Type          string                           `json:"type"`
+}
+
+type SubscriptionPricePointsResponse struct {
+	Data  SubscriptionPricePoint `json:"data"`
+	Links DocumentLinks          `json:"links"`
+}
+
 type SubscriptionLocalization struct {
 	Attributes    SubscriptionLocalizationAttributes `json:"attributes"`
 	ID            string                             `json:"id"`
@@ -257,5 +276,14 @@ func (s *SubscriptionsService) CreateSubscriptionLocalization(ctx context.Contex
 func (s *SubscriptionsService) GetSubscription(ctx context.Context, id string) (*SubscriptionResponse, *Response, error) {
 	res := new(SubscriptionResponse)
 	resp, err := s.client.get(ctx, "v1/subscriptions/"+id, nil, res)
+	return res, resp, err
+}
+
+// GetSubscriptionPricePoints returns a list of approved prices apple will allow you to set for a subscription.
+//
+// https://developer.apple.com/documentation/appstoreconnectapi/read_subscription_price_point_information
+func (s *SubscriptionsService) GetSubscriptionPricePoints(ctx context.Context, id string) (*SubscriptionPricePointsResponse, *Response, error) {
+	res := new(SubscriptionPricePointsResponse)
+	resp, err := s.client.get(ctx, "v1/subscriptionPricePoints/"+id, nil, res)
 	return res, resp, err
 }

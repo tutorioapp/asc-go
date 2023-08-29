@@ -114,7 +114,7 @@ type SubscriptionLocalizationResponse struct {
 
 type SubscriptionPriceCreateAttributes struct {
 	PreserveCurrentPrice bool      `json:"preserveCurrentPrice"`
-	Preserved            bool      `json:"preserved"`
+	Preserved            bool      `json:"preserved,omitempty"`
 	StartDate            time.Time `json:"startDate"`
 }
 

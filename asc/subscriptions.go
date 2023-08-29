@@ -317,7 +317,7 @@ func (s *SubscriptionsService) CreateSubscriptionPriceChange(ctx context.Context
 	resp, err := s.client.post(ctx, "v1/subscriptionPrices", newRequestBody(SubscriptionPriceCreateData{
 		Attributes: SubscriptionPriceCreateAttributes{
 			PreserveCurrentPrice: preserveCurrentPrice,
-			StartDate:            time.Now().Format(time.RFC3339), // ISO 8601
+			StartDate:            time.Now().Format("2006-01-02T15:04:05Z07:00"), // ISO 8601
 		},
 		Relationships: struct {
 			Subscription struct {

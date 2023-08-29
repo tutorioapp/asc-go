@@ -287,6 +287,6 @@ func (s *SubscriptionsService) GetSubscription(ctx context.Context, id string) (
 // https://developer.apple.com/documentation/appstoreconnectapi/read_subscription_price_point_information
 func (s *SubscriptionsService) GetSubscriptionPricePoints(ctx context.Context, id, territory string) (*SubscriptionPricePointsResponse, *Response, error) {
 	res := new(SubscriptionPricePointsResponse)
-	resp, err := s.client.get(ctx, "v1/subscriptions/"+id+"/pricePoints?include=territory&filter[territory]="+url.QueryEscape(territory), nil, res)
+	resp, err := s.client.get(ctx, "v1/subscriptions/"+id+"/pricePoints?include=territory&filter[territory]="+url.QueryEscape(territory)+"&limit=8000", nil, res)
 	return res, resp, err
 }

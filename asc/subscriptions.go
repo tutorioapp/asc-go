@@ -113,9 +113,9 @@ type SubscriptionLocalizationResponse struct {
 }
 
 type SubscriptionPriceCreateAttributes struct {
-	PreserveCurrentPrice bool      `json:"preserveCurrentPrice"`
-	Preserved            bool      `json:"preserved,omitempty"`
-	StartDate            time.Time `json:"startDate"`
+	PreserveCurrentPrice bool   `json:"preserveCurrentPrice"`
+	Preserved            bool   `json:"preserved,omitempty"`
+	StartDate            string `json:"startDate"`
 }
 
 type SubscriptionPriceCreate struct {
@@ -317,7 +317,7 @@ func (s *SubscriptionsService) CreateSubscriptionPriceChange(ctx context.Context
 	resp, err := s.client.post(ctx, "v1/subscriptionPrices", newRequestBody(SubscriptionPriceCreateData{
 		Attributes: SubscriptionPriceCreateAttributes{
 			PreserveCurrentPrice: preserveCurrentPrice,
-			StartDate:            time.Now(),
+			StartDate:            time.Now().Format("2020-01-02T16:20:00"), // RFC8601
 		},
 		Relationships: struct {
 			Subscription struct {

@@ -198,6 +198,20 @@ type SubscriptionPriceCreateData struct {
 	Type string `json:"type"`
 }
 
+type SubscriptionGroupsResponse struct {
+	Data  []SubscriptionGroup `json:"data"`
+	Links DocumentLinks       `json:"links"`
+}
+
+// GetSubscriptionGroups gets a subscription group for an app.
+//
+// https://developer.apple.com/documentation/appstoreconnectapi/create_a_subscription_group
+func (s *SubscriptionsService) GetSubscriptionGroups(ctx context.Context, appID, groupName string) (*SubscriptionGroupsResponse, *Response, error) {
+	res := new(SubscriptionGroupsResponse)
+	resp, err := s.client.get(ctx, "v1/apps/"+appID+"/subscriptionGroups?filter[referenceName]="+url.QueryEscape(groupName), nil, res)
+	return res, resp, err
+}
+
 // CreateSubscriptionGroup creates a subscription group for an app.
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/create_a_subscription_group

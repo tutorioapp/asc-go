@@ -67,6 +67,11 @@ type SubscriptionGroupResponse struct {
 	Links DocumentLinks     `json:"links"`
 }
 
+type SubscriptionsResponse struct {
+	Data  []Subscription `json:"data"`
+	Links DocumentLinks  `json:"links"`
+}
+
 type Subscription struct {
 	Attributes    SubscriptionAttributes `json:"attributes"`
 	ID            string                 `json:"id"`
@@ -350,6 +355,15 @@ func (s *SubscriptionsService) CreateSubscriptionPriceChange(ctx context.Context
 		},
 		Type: "subscriptionPrices",
 	}), res)
+	return res, resp, err
+}
+
+// ListSubscriptionsByGroup returns a list of subscriptions for a given subscription group ID.
+//
+// https://developer.apple.com/documentation/appstoreconnectapi/list_all_subscriptions_for_a_subscription_group
+func (s *SubscriptionsService) ListSubscriptionsByGroup(ctx context.Context, id string) (*SubscriptionsResponse, *Response, error) {
+	res := new(SubscriptionsResponse)
+	resp, err := s.client.get(ctx, "v1/subscriptionGroups/"+id+"/subscriptions", nil, res)
 	return res, resp, err
 }
 

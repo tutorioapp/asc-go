@@ -2,6 +2,7 @@ package asc
 
 import (
 	"context"
+	"fmt"
 	"net/url"
 	"time"
 )
@@ -238,6 +239,13 @@ func (s *SubscriptionsService) CreateSubscriptionGroup(ctx context.Context, appI
 	return res, resp, err
 }
 
+// DeleteSubscriptionGroup deletes a subscription group for an app.
+//
+// https://developer.apple.com/documentation/appstoreconnectapi/delete_a_subscription_group
+func (s *SubscriptionsService) DeleteSubscriptionGroup(ctx context.Context, groupID string) (*Response, error) {
+	return s.client.delete(ctx, "v1/subscriptionGroups/"+groupID, nil)
+}
+
 // CreateSubscriptionGroupLocalization creates a subscription group localization.
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/create_a_subscription_group_localization
@@ -261,6 +269,15 @@ func (s *SubscriptionsService) CreateSubscriptionGroupLocalization(ctx context.C
 		Type: "subscriptionGroupLocalizations",
 	}), res)
 	return res, resp, err
+}
+
+// DeleteSubscriptionGroupLocalization deletes a subscription group localization.
+//
+// https://developer.apple.com/documentation/appstoreconnectapi/delete_a_subscription_group_localization
+func (s *SubscriptionsService) DeleteSubscriptionGroupLocalization(ctx context.Context, localizationID string) (*Response, error) {
+	res := new(Response)
+	_, err := s.client.delete(ctx, fmt.Sprintf("v1/subscriptionGroupLocalizations/%s", localizationID), nil)
+	return res, err
 }
 
 type SubscriptionPeriod string
@@ -303,6 +320,13 @@ func (s *SubscriptionsService) CreateSubscription(ctx context.Context, name, pro
 	return res, resp, err
 }
 
+// DeleteSubscription deletes a subscription for an app.
+//
+// https://developer.apple.com/documentation/appstoreconnectapi/delete_an_auto-renewable_subscription
+func (s *SubscriptionsService) DeleteSubscription(ctx context.Context, subscriptionID string) (*Response, error) {
+	return s.client.delete(ctx, "v1/subscriptions/"+subscriptionID, nil)
+}
+
 // CreateSubscriptionLocalization creates a subscription localization.
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/create_a_subscription_localization
@@ -326,6 +350,14 @@ func (s *SubscriptionsService) CreateSubscriptionLocalization(ctx context.Contex
 		Type: "subscriptionLocalizations",
 	}), res)
 	return res, resp, err
+}
+
+// DeleteSubscriptionLocalization deletes a subscription localization.
+//
+// https://developer.apple.com/documentation/appstoreconnectapi/delete_a_subscription_localization
+func (s *SubscriptionsService) DeleteSubscriptionLocalization(ctx context.Context, subscriptionLocalizationID string) (*Response, error) {
+	url := fmt.Sprintf("v1/subscriptionLocalizations/%s", subscriptionLocalizationID)
+	return s.client.delete(ctx, url, nil)
 }
 
 // CreateSubscriptionPriceChange schedules a subscription price change for a specific territory.

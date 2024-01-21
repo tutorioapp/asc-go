@@ -45,13 +45,12 @@ type SubscriptionGroupAttributes struct {
 
 // SubscriptionAttributes defines https://developer.apple.com/documentation/appstoreconnectapi/subscriptioncreaterequest/data/attributes
 type SubscriptionAttributes struct {
-	AvailableInAllTerritories bool   `json:"availableInAllTerritories"`
-	FamilySharable            bool   `json:"familySharable"`
-	Name                      string `json:"name"`
-	ProductID                 string `json:"productId"`
-	ReviewNotes               string `json:"reviewNote"`
-	SubscriptionPeriod        string `json:"subscriptionPeriod"`
-	GroupLevel                int    `json:"groupLevel"`
+	FamilySharable     bool   `json:"familySharable"`
+	Name               string `json:"name"`
+	ProductID          string `json:"productId"`
+	ReviewNotes        string `json:"reviewNote"`
+	SubscriptionPeriod string `json:"subscriptionPeriod"`
+	GroupLevel         int    `json:"groupLevel"`
 }
 
 // SubscriptionGroup defines https://developer.apple.com/documentation/appstoreconnectapi/subscriptiongroup
@@ -298,13 +297,12 @@ func (s *SubscriptionsService) CreateSubscription(ctx context.Context, name, pro
 	res := new(SubscriptionResponse)
 	resp, err := s.client.post(ctx, "v1/subscriptions", newRequestBody(SubscriptionData{
 		Attributes: SubscriptionAttributes{
-			AvailableInAllTerritories: true,
-			FamilySharable:            false,
-			Name:                      name,
-			ProductID:                 productID,
-			ReviewNotes:               reviewNotes,
-			SubscriptionPeriod:        string(period),
-			GroupLevel:                1,
+			FamilySharable:     false,
+			Name:               name,
+			ProductID:          productID,
+			ReviewNotes:        reviewNotes,
+			SubscriptionPeriod: string(period),
+			GroupLevel:         1,
 		},
 		Relationships: struct {
 			App struct {

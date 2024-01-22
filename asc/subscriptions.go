@@ -199,6 +199,9 @@ type SubscriptionPriceCreateData struct {
 		SubscriptionPricePoint struct {
 			Data *RelationshipData `json:"data"`
 		} `json:"subscriptionPricePoint"`
+		Territory struct {
+			Data *RelationshipData `json:"data"`
+		} `json:"territory"`
 	} `json:"relationships"`
 	Type string `json:"type"`
 }
@@ -361,7 +364,7 @@ func (s *SubscriptionsService) DeleteSubscriptionLocalization(ctx context.Contex
 // CreateSubscriptionPriceChange schedules a subscription price change for a specific territory.
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/create_a_subscription_price_change
-func (s *SubscriptionsService) CreateSubscriptionPriceChange(ctx context.Context, subscriptionID, priceID string, preserveCurrentPrice bool) (*SubscriptionPriceCreateResponse, *Response, error) {
+func (s *SubscriptionsService) CreateSubscriptionPriceChange(ctx context.Context, subscriptionID, priceID, regionID string, preserveCurrentPrice bool) (*SubscriptionPriceCreateResponse, *Response, error) {
 	res := new(SubscriptionPriceCreateResponse)
 	resp, err := s.client.post(ctx, "v1/subscriptionPrices", newRequestBody(SubscriptionPriceCreateData{
 		Attributes: SubscriptionPriceCreateAttributes{
@@ -375,6 +378,9 @@ func (s *SubscriptionsService) CreateSubscriptionPriceChange(ctx context.Context
 			SubscriptionPricePoint struct {
 				Data *RelationshipData `json:"data"`
 			} `json:"subscriptionPricePoint"`
+			Territory struct {
+				Data *RelationshipData `json:"data"`
+			} `json:"territory"`
 		}{
 			Subscription: struct {
 				Data *RelationshipData `json:"data"`
@@ -382,6 +388,9 @@ func (s *SubscriptionsService) CreateSubscriptionPriceChange(ctx context.Context
 			SubscriptionPricePoint: struct {
 				Data *RelationshipData `json:"data"`
 			}{Data: &RelationshipData{ID: priceID, Type: "subscriptionPricePoints"}},
+			Territory: struct {
+				Data *RelationshipData `json:"data"`
+			}{Data: &RelationshipData{ID: regionID, Type: "territories"}},
 		},
 		Type: "subscriptionPrices",
 	}), res)

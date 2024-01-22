@@ -211,6 +211,29 @@ type SubscriptionGroupsResponse struct {
 	Links DocumentLinks       `json:"links"`
 }
 
+// SubscriptionAvailabilityData defines model for SubscriptionAvailabilityCreateRequest.Data
+//
+// https://developer.apple.com/documentation/appstoreconnectapi/subscriptionavailabilitycreaterequest/data
+type SubscriptionAvailabilityData struct {
+	Attributes    SubscriptionAvailabilityAttributes `json:"attributes"`
+	Relationships struct {
+		AvailableTerritories struct {
+			Data []*RelationshipData `json:"data"`
+		} `json:"availableTerritories"`
+		Subscription struct {
+			Data *RelationshipData `json:"data"`
+		} `json:"subscription"`
+	} `json:"relationships"`
+	Type string `json:"type"`
+}
+
+// SubscriptionAvailabilityAttributes defines model for SubscriptionAvailabilityCreateRequest.Data.Attributes
+//
+// https://developer.apple.com/documentation/appstoreconnectapi/subscriptionavailabilitycreaterequest/data/attributes
+type SubscriptionAvailabilityAttributes struct {
+	AvailableInNewTerritories bool `json:"availableInNewTerritories"`
+}
+
 // GetSubscriptionGroups gets a subscription group for an app.
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/create_a_subscription_group
@@ -395,6 +418,34 @@ func (s *SubscriptionsService) CreateSubscriptionPriceChange(ctx context.Context
 		Type: "subscriptionPrices",
 	}), res)
 	return res, resp, err
+}
+
+// SetSubscriptionAvailability sets the availability of a subscription for specified territories.
+//
+// https://developer.apple.com/documentation/appstoreconnectapi/modify_the_territory_availability_of_a_subscription
+func (s *SubscriptionsService) SetSubscriptionAvailability(ctx context.Context, subscriptionID string, regions []*RelationshipData) (*Response, error) {
+	resp, err := s.client.post(ctx, "v1/subscriptionAvailabilities", newRequestBody(SubscriptionAvailabilityData{
+		Attributes: SubscriptionAvailabilityAttributes{
+			AvailableInNewTerritories: true,
+		},
+		Relationships: struct {
+			AvailableTerritories struct {
+				Data []*RelationshipData `json:"data"`
+			} `json:"availableTerritories"`
+			Subscription struct {
+				Data *RelationshipData `json:"data"`
+			} `json:"subscription"`
+		}{
+			AvailableTerritories: struct {
+				Data []*RelationshipData `json:"data"`
+			}{Data: regions},
+			Subscription: struct {
+				Data *RelationshipData `json:"data"`
+			}{Data: &RelationshipData{ID: subscriptionID, Type: "subscriptions"}},
+		},
+		Type: "subscriptionAvailabilities",
+	}), nil)
+	return resp, err
 }
 
 // ListSubscriptionsByGroup returns a list of subscriptions for a given subscription group ID.

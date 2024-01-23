@@ -118,8 +118,8 @@ type SubscriptionPrice struct {
 }
 
 type SubscriptionPriceAttributes struct {
-	Preserved bool      `json:"preserved"`
-	StartDate time.Time `json:"startDate"`
+	Preserved bool   `json:"preserved"`
+	StartDate string `json:"startDate"`
 }
 
 type SubscriptionLocalization struct {

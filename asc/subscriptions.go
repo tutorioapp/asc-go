@@ -104,6 +104,24 @@ type SubscriptionPricePointsResponse struct {
 	Links DocumentLinks            `json:"links"`
 }
 
+type SubscriptionPriceResponse struct {
+	Data  []SubscriptionPrice `json:"data"`
+	Links DocumentLinks       `json:"links"`
+}
+
+type SubscriptionPrice struct {
+	Attributes    SubscriptionPriceAttributes `json:"attributes"`
+	ID            string                      `json:"id"`
+	Links         ResourceLinks               `json:"links"`
+	Relationships any                         `json:"relationships"`
+	Type          string                      `json:"type"`
+}
+
+type SubscriptionPriceAttributes struct {
+	Preserved bool      `json:"preserved"`
+	StartDate time.Time `json:"startDate"`
+}
+
 type SubscriptionLocalization struct {
 	Attributes    SubscriptionLocalizationAttributes `json:"attributes"`
 	ID            string                             `json:"id"`
@@ -472,5 +490,14 @@ func (s *SubscriptionsService) GetSubscription(ctx context.Context, id string) (
 func (s *SubscriptionsService) GetSubscriptionPricePoints(ctx context.Context, id, territory string) (*SubscriptionPricePointsResponse, *Response, error) {
 	res := new(SubscriptionPricePointsResponse)
 	resp, err := s.client.get(ctx, "v1/subscriptions/"+id+"/pricePoints?include=territory&filter[territory]="+url.QueryEscape(territory)+"&limit=8000", nil, res)
+	return res, resp, err
+}
+
+// GetSubscriptionPrice returns a list of prices for an auto-renewable subscription, by territory.
+//
+// https://developer.apple.com/documentation/appstoreconnectapi/list_all_prices_for_a_subscription
+func (s *SubscriptionsService) GetSubscriptionPrice(ctx context.Context, id, territory string) (*SubscriptionPriceResponse, *Response, error) {
+	res := new(SubscriptionPriceResponse)
+	resp, err := s.client.get(ctx, "v1/subscriptions/"+id+"/prices?include=territory&filter[territory]="+url.QueryEscape(territory)+"&limit=200", nil, res)
 	return res, resp, err
 }

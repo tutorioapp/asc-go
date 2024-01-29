@@ -571,7 +571,7 @@ func (s *SubscriptionsService) SetSubscriptionPrices(ctx context.Context, name, 
 			}{Data: []*RelationshipData{}},
 			Prices: struct {
 				Data []*RelationshipData `json:"data"`
-			}{Data: []*RelationshipData{}},
+			}{Data: priceRels},
 			PromotionalOffers: struct {
 				Data []*RelationshipData `json:"data"`
 			}{Data: []*RelationshipData{}},

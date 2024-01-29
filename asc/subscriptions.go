@@ -5,7 +5,6 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/url"
 	"time"
 )
@@ -577,21 +576,6 @@ func (s *SubscriptionsService) SetSubscriptionPrices(ctx context.Context, subID 
 
 		i++
 	}
-
-	builtReq := newRequestBodyWithIncluded(SubscriptionPriceCreateRequest{
-		Type: "subscriptions",
-		ID:   subID,
-		Relationships: SubscriptionPriceUpdateRelationships{
-			Prices: struct {
-				Data []*RelationshipData `json:"data"`
-			}{Data: priceData},
-		},
-	}, include)
-	// print as json
-	builtReqJson, _ := json.Marshal(builtReq)
-
-	// dump to pricesOutput.json
-	ioutil.WriteFile("pricesOutput.json", builtReqJson, 0644)
 
 	res := new(SubscriptionResponse)
 	resp, err := s.client.patch(ctx, "v1/subscriptions/"+subID, newRequestBodyWithIncluded(SubscriptionPriceCreateRequest{

@@ -538,8 +538,7 @@ type InAppPurchasePriceInlineCreate struct {
 }
 
 type InAppPurchasePriceInlineCreateAttributes struct {
-	EndDate   string `json:"endDate"`
-	StartDate any    `json:"startDate"`
+	StartDate any `json:"startDate"`
 }
 
 type InAppPurchasePriceInlineCreateRelationships struct {

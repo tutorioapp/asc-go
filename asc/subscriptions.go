@@ -2,7 +2,6 @@ package asc
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"net/url"
 	"time"
@@ -514,100 +513,185 @@ func (s *SubscriptionsService) GetSubscription(ctx context.Context, id string) (
 	return res, resp, err
 }
 
-// SetSubscriptionPrices bulks sets the prices for a subscription.
-//
-// https://developer.apple.com/documentation/appstoreconnectapi/modify_an_auto-renewable_subscription#path-parameters
-func (s *SubscriptionsService) SetSubscriptionPrices(ctx context.Context, name, reviewNotes, subscriptionID string, startTime time.Time, regionPrice map[string]string) (*SubscriptionResponse, *Response, error) {
-	var prices []SubscriptionPriceCreateData
-	//var priceRels []*RelationshipData
+type InAppPurchasePriceScheduleCreateRequest struct {
+	Relationships InAppPurchasePriceScheduleCreateRequestRelationships `json:"relationships"`
+	Type          string                                               `json:"type"`
+}
 
-	for region, price := range regionPrice {
+type InAppPurchasePriceScheduleCreateRequestRelationships struct {
+	BaseTerritory struct {
+		Data *RelationshipData `json:"data"`
+	} `json:"baseTerritory"`
+	InAppPurchase struct {
+		Data *RelationshipData `json:"data"`
+	} `json:"inAppPurchase"`
+	ManualPrices struct {
+		Data []*RelationshipData `json:"data"`
+	} `json:"manualPrices"`
+}
 
-		//priceJson, err := base64.RawStdEncoding.DecodeString(price)
-		//if err != nil {
-		//	return nil, nil, err
-		//}
-		//
-		//var priceInfo map[string]string
-		//if err := json.Unmarshal(priceJson, &priceInfo); err != nil {
-		//	return nil, nil, err
-		//}
+type InAppPurchasePriceInlineCreate struct {
+	Attributes    InAppPurchasePriceInlineCreateAttributes    `json:"attributes"`
+	ID            string                                      `json:"id"`
+	Relationships InAppPurchasePriceInlineCreateRelationships `json:"relationships"`
+	Type          string                                      `json:"type"`
+}
 
-		prices = append(prices, SubscriptionPriceCreateData{
-			Attributes: SubscriptionPriceCreateAttributes{
-				PreserveCurrentPrice: true,
-				StartDate:            startTime.Format("2006-01-02"), // ISO 8601
-			},
-			ID: subscriptionID,
-			Relationships: struct {
-				Subscription struct {
-					Data *RelationshipData `json:"data"`
-				} `json:"subscription"`
-				SubscriptionPricePoint struct {
-					Data *RelationshipData `json:"data"`
-				} `json:"subscriptionPricePoint"`
-				Territory struct {
-					Data *RelationshipData `json:"data"`
-				} `json:"territory"`
-			}{
-				Subscription: struct {
-					Data *RelationshipData `json:"data"`
-				}{Data: &RelationshipData{ID: subscriptionID, Type: "subscriptions"}},
-				SubscriptionPricePoint: struct {
-					Data *RelationshipData `json:"data"`
-				}{Data: &RelationshipData{ID: price, Type: "subscriptionPricePoints"}},
-				Territory: struct {
-					Data *RelationshipData `json:"data"`
-				}{Data: &RelationshipData{ID: region, Type: "territories"}},
-			},
-			Type: "subscriptionPrices",
-		})
+type InAppPurchasePriceInlineCreateAttributes struct {
+	EndDate   string `json:"endDate"`
+	StartDate any    `json:"startDate"`
+}
 
-		//priceJson, err := base64.RawStdEncoding.DecodeString(price)
-		//if err != nil {
-		//	return nil, nil, err
-		//}
-		//
-		//var priceInfo map[string]string
-		//if err := json.Unmarshal(priceJson, &priceInfo); err != nil {
-		//	return nil, nil, err
-		//}
-		//
-		//priceRels = append(priceRels, &RelationshipData{ID: priceInfo["p"], Type: "subscriptionPrices"})
+type InAppPurchasePriceInlineCreateRelationships struct {
+	InAppPurchasePricePoint struct {
+		Data *RelationshipData `json:"data"`
+	} `json:"inAppPurchasePricePoint"`
+	InAppPurchaseV2 struct {
+		Data *RelationshipData `json:"data"`
+	} `json:"inAppPurchaseV2"`
+}
+
+func (s *SubscriptionsService) SetSubscriptionPrices(ctx context.Context, subID string, startTime time.Time, regionPrice map[string]string) (*SubscriptionResponse, *Response, error) {
+	var priceData []*RelationshipData
+	var include []InAppPurchasePriceInlineCreate
+
+	var startAt any
+	if startTime == (time.Time{}) {
+		startAt = nil
+	} else {
+		startAt = startTime.Format("2006-01-02")
 	}
 
-	fmt.Println(prices)
+	var i = 0
+	for _, priceID := range regionPrice {
+		priceData = append(priceData, &RelationshipData{ID: fmt.Sprintf("${price%d}", i), Type: "inAppPurchasePrices"})
+		include = append(include, InAppPurchasePriceInlineCreate{
+			Type: "inAppPurchasePrices",
+			ID:   fmt.Sprintf("${price%d}", i),
+			Attributes: InAppPurchasePriceInlineCreateAttributes{
+				StartDate: startAt,
+			},
+			Relationships: InAppPurchasePriceInlineCreateRelationships{
+				InAppPurchasePricePoint: struct {
+					Data *RelationshipData `json:"data"`
+				}{Data: &RelationshipData{ID: priceID, Type: "inAppPurchasePricePoints"}},
+				InAppPurchaseV2: struct {
+					Data *RelationshipData `json:"data"`
+				}{Data: &RelationshipData{ID: subID, Type: "inAppPurchases"}},
+			},
+		})
+		i++
+	}
 
 	res := new(SubscriptionResponse)
-	resp, err := s.client.patch(ctx, "v1/subscriptions/"+subscriptionID, newRequestBodyWithIncluded(SubscriptionUpdateRequestData{
-		Attributes: SubscriptionUpdateAttributes{
-			FamilySharable:     false,
-			Name:               name,
-			ReviewNote:         reviewNotes,
-			SubscriptionPeriod: string(SubscriptionPeriodP1M),
-			GroupLevel:         1,
+	resp, err := s.client.post(ctx, "v1/inAppPurchasePriceSchedules", newRequestBodyWithIncluded(InAppPurchasePriceScheduleCreateRequest{
+		Type: "inAppPurchasePriceSchedules",
+		Relationships: InAppPurchasePriceScheduleCreateRequestRelationships{
+			InAppPurchase: struct {
+				Data *RelationshipData `json:"data"`
+			}{Data: &RelationshipData{ID: subID, Type: "inAppPurchases"}},
+			ManualPrices: struct {
+				Data []*RelationshipData `json:"data"`
+			}{Data: priceData},
 		},
-		ID:   subscriptionID,
-		Type: "subscriptions",
-		Relationships: SubscriptionUpdateRelationships{
-			IntroductoryOffers: struct {
-				Data []*RelationshipData `json:"data"`
-			}{Data: []*RelationshipData{}},
-			Prices: struct {
-				Data []*RelationshipData `json:"data"`
-			}{Data: []*RelationshipData{}},
-			PromotionalOffers: struct {
-				Data []*RelationshipData `json:"data"`
-			}{Data: []*RelationshipData{}},
-		},
-	}, prices), res)
-
-	resJson, _ := json.Marshal(res)
-	fmt.Println(string(resJson))
-	fmt.Println(resp.Status)
-
+	}, include), &res)
 	return res, resp, err
 }
+
+//// SetSubscriptionPrices bulks sets the prices for a subscription.
+////
+//// https://developer.apple.com/documentation/appstoreconnectapi/modify_an_auto-renewable_subscription#path-parameters
+//func (s *SubscriptionsService) SetSubscriptionPrices(ctx context.Context, name, reviewNotes, subscriptionID string, startTime time.Time, regionPrice map[string]string) (*SubscriptionResponse, *Response, error) {
+//	var prices []SubscriptionPriceCreateData
+//	//var priceRels []*RelationshipData
+//
+//	for region, price := range regionPrice {
+//
+//		//priceJson, err := base64.RawStdEncoding.DecodeString(price)
+//		//if err != nil {
+//		//	return nil, nil, err
+//		//}
+//		//
+//		//var priceInfo map[string]string
+//		//if err := json.Unmarshal(priceJson, &priceInfo); err != nil {
+//		//	return nil, nil, err
+//		//}
+//
+//		prices = append(prices, SubscriptionPriceCreateData{
+//			Attributes: SubscriptionPriceCreateAttributes{
+//				PreserveCurrentPrice: true,
+//				StartDate:            startTime.Format("2006-01-02"), // ISO 8601
+//			},
+//			ID: subscriptionID,
+//			Relationships: struct {
+//				Subscription struct {
+//					Data *RelationshipData `json:"data"`
+//				} `json:"subscription"`
+//				SubscriptionPricePoint struct {
+//					Data *RelationshipData `json:"data"`
+//				} `json:"subscriptionPricePoint"`
+//				Territory struct {
+//					Data *RelationshipData `json:"data"`
+//				} `json:"territory"`
+//			}{
+//				Subscription: struct {
+//					Data *RelationshipData `json:"data"`
+//				}{Data: &RelationshipData{ID: subscriptionID, Type: "subscriptions"}},
+//				SubscriptionPricePoint: struct {
+//					Data *RelationshipData `json:"data"`
+//				}{Data: &RelationshipData{ID: price, Type: "subscriptionPricePoints"}},
+//				Territory: struct {
+//					Data *RelationshipData `json:"data"`
+//				}{Data: &RelationshipData{ID: region, Type: "territories"}},
+//			},
+//			Type: "subscriptionPrices",
+//		})
+//
+//		//priceJson, err := base64.RawStdEncoding.DecodeString(price)
+//		//if err != nil {
+//		//	return nil, nil, err
+//		//}
+//		//
+//		//var priceInfo map[string]string
+//		//if err := json.Unmarshal(priceJson, &priceInfo); err != nil {
+//		//	return nil, nil, err
+//		//}
+//		//
+//		//priceRels = append(priceRels, &RelationshipData{ID: priceInfo["p"], Type: "subscriptionPrices"})
+//	}
+//
+//	fmt.Println(prices)
+//
+//	res := new(SubscriptionResponse)
+//	resp, err := s.client.patch(ctx, "v1/subscriptions/"+subscriptionID, newRequestBodyWithIncluded(SubscriptionUpdateRequestData{
+//		Attributes: SubscriptionUpdateAttributes{
+//			FamilySharable:     false,
+//			Name:               name,
+//			ReviewNote:         reviewNotes,
+//			SubscriptionPeriod: string(SubscriptionPeriodP1M),
+//			GroupLevel:         1,
+//		},
+//		ID:   subscriptionID,
+//		Type: "subscriptions",
+//		Relationships: SubscriptionUpdateRelationships{
+//			IntroductoryOffers: struct {
+//				Data []*RelationshipData `json:"data"`
+//			}{Data: []*RelationshipData{}},
+//			Prices: struct {
+//				Data []*RelationshipData `json:"data"`
+//			}{Data: []*RelationshipData{}},
+//			PromotionalOffers: struct {
+//				Data []*RelationshipData `json:"data"`
+//			}{Data: []*RelationshipData{}},
+//		},
+//	}, prices), res)
+//
+//	resJson, _ := json.Marshal(res)
+//	fmt.Println(string(resJson))
+//	fmt.Println(resp.Status)
+//
+//	return res, resp, err
+//}
 
 // GetSubscriptionPricePoints returns a list of approved prices apple will allow you to set for a subscription.
 //

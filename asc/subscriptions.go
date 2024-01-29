@@ -562,23 +562,6 @@ func (s *SubscriptionsService) SetSubscriptionPrices(ctx context.Context, name, 
 		},
 		ID:   subscriptionID,
 		Type: "subscriptions",
-		Relationships: SubscriptionUpdateRelationships{
-			IntroductoryOffers: struct {
-				Data []*RelationshipData `json:"data"`
-			}{Data: []*RelationshipData{
-				{ID: subscriptionID, Type: "subscriptionIntroductoryOffers"},
-			}},
-			Prices: struct {
-				Data []*RelationshipData `json:"data"`
-			}{Data: []*RelationshipData{
-				{ID: subscriptionID, Type: "subscriptionPrices"},
-			}},
-			PromotionalOffers: struct {
-				Data []*RelationshipData `json:"data"`
-			}{Data: []*RelationshipData{
-				{ID: subscriptionID, Type: "subscriptionPromotionalOffers"},
-			}},
-		},
 	}, prices), res)
 	return res, resp, err
 }

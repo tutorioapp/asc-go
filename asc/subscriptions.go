@@ -192,6 +192,33 @@ type SubscriptionLocalizationData struct {
 	Type string `json:"type"`
 }
 
+type SubscriptionUpdateRequestData struct {
+	Attributes    SubscriptionUpdateAttributes    `json:"attributes"`
+	ID            string                          `json:"id"`
+	Relationships SubscriptionUpdateRelationships `json:"relationships"`
+	Type          string                          `json:"type"`
+}
+
+type SubscriptionUpdateAttributes struct {
+	FamilySharable     bool   `json:"familySharable"`
+	Name               string `json:"name"`
+	ReviewNote         string `json:"reviewNote"`
+	SubscriptionPeriod string `json:"subscriptionPeriod"`
+	GroupLevel         int    `json:"groupLevel"`
+}
+
+type SubscriptionUpdateRelationships struct {
+	IntroductoryOffers struct {
+		Data []RelationshipData `json:"data"`
+	} `json:"introductoryOffer"`
+	Prices struct {
+		Data []RelationshipData `json:"data"`
+	} `json:"prices"`
+	PromotionalOffers struct {
+		Data []RelationshipData `json:"data"`
+	} `json:"promotionalOffers"`
+}
+
 // SubscriptionGroupLocalizationData defines model for SubscriptionGroupLocalizationCreateRequest.Data
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/subscriptiongrouplocalizationcreaterequest/data
@@ -405,6 +432,7 @@ func (s *SubscriptionsService) DeleteSubscriptionLocalization(ctx context.Contex
 // CreateSubscriptionPriceChange schedules a subscription price change for a specific territory.
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/create_a_subscription_price_change
+// Deprecated: use CreateSubscriptionPriceChange instead
 func (s *SubscriptionsService) CreateSubscriptionPriceChange(ctx context.Context, subscriptionID, priceID, regionID string, preserveCurrentPrice bool) (*SubscriptionPriceCreateResponse, *Response, error) {
 	res := new(SubscriptionPriceCreateResponse)
 	resp, err := s.client.post(ctx, "v1/subscriptionPrices", newRequestBody(SubscriptionPriceCreateData{
@@ -481,6 +509,53 @@ func (s *SubscriptionsService) ListSubscriptionsByGroup(ctx context.Context, id 
 func (s *SubscriptionsService) GetSubscription(ctx context.Context, id string) (*SubscriptionResponse, *Response, error) {
 	res := new(SubscriptionResponse)
 	resp, err := s.client.get(ctx, "v1/subscriptions/"+id, nil, res)
+	return res, resp, err
+}
+
+// SetSubscriptionPrices bulks sets the prices for a subscription.
+//
+// https://developer.apple.com/documentation/appstoreconnectapi/modify_an_auto-renewable_subscription#path-parameters
+func (s *SubscriptionsService) SetSubscriptionPrices(ctx context.Context, subscriptionID string, regionPrice map[string]string) (*SubscriptionResponse, *Response, error) {
+	var prices []SubscriptionPriceCreateData
+
+	for region, price := range regionPrice {
+		prices = append(prices, SubscriptionPriceCreateData{
+			Attributes: SubscriptionPriceCreateAttributes{
+				PreserveCurrentPrice: true,
+				StartDate:            time.Now().Format("2006-01-02"),
+			},
+			Relationships: struct {
+				Subscription struct {
+					Data *RelationshipData `json:"data"`
+				} `json:"subscription"`
+				SubscriptionPricePoint struct {
+					Data *RelationshipData `json:"data"`
+				} `json:"subscriptionPricePoint"`
+				Territory struct {
+					Data *RelationshipData `json:"data"`
+				} `json:"territory"`
+			}{
+				Subscription: struct {
+					Data *RelationshipData `json:"data"`
+				}{Data: &RelationshipData{ID: subscriptionID, Type: "subscriptions"}},
+				SubscriptionPricePoint: struct {
+					Data *RelationshipData `json:"data"`
+				}{Data: &RelationshipData{ID: price, Type: "subscriptionPricePoints"}},
+				Territory: struct {
+					Data *RelationshipData `json:"data"`
+				}{Data: &RelationshipData{ID: region, Type: "territories"}},
+			},
+			Type: "subscriptionPrices",
+		})
+	}
+
+	res := new(SubscriptionResponse)
+	resp, err := s.client.patch(ctx, "v1/subscriptions/"+subscriptionID, newRequestBodyWithIncluded(SubscriptionUpdateRequestData{
+		Attributes:    SubscriptionUpdateAttributes{},
+		ID:            subscriptionID,
+		Relationships: SubscriptionUpdateRelationships{},
+		Type:          "subscriptions",
+	}, prices), res)
 	return res, resp, err
 }
 

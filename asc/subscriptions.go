@@ -237,6 +237,7 @@ type SubscriptionGroupLocalizationData struct {
 // https://developer.apple.com/documentation/appstoreconnectapi/subscriptionpricecreaterequest/data
 type SubscriptionPriceCreateData struct {
 	Attributes    SubscriptionPriceCreateAttributes `json:"attributes"`
+	ID            string                            `json:"id"`
 	Relationships struct {
 		Subscription struct {
 			Data *RelationshipData `json:"data"`
@@ -524,6 +525,7 @@ func (s *SubscriptionsService) SetSubscriptionPrices(ctx context.Context, name, 
 				PreserveCurrentPrice: true,
 				StartDate:            time.Now().Format("2006-01-02"),
 			},
+			ID: subscriptionID,
 			Relationships: struct {
 				Subscription struct {
 					Data *RelationshipData `json:"data"`

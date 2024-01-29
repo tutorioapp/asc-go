@@ -515,7 +515,7 @@ func (s *SubscriptionsService) GetSubscription(ctx context.Context, id string) (
 // SetSubscriptionPrices bulks sets the prices for a subscription.
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/modify_an_auto-renewable_subscription#path-parameters
-func (s *SubscriptionsService) SetSubscriptionPrices(ctx context.Context, subscriptionID string, regionPrice map[string]string) (*SubscriptionResponse, *Response, error) {
+func (s *SubscriptionsService) SetSubscriptionPrices(ctx context.Context, name, reviewNotes, subscriptionID string, regionPrice map[string]string) (*SubscriptionResponse, *Response, error) {
 	var prices []SubscriptionPriceCreateData
 
 	for region, price := range regionPrice {
@@ -551,9 +551,15 @@ func (s *SubscriptionsService) SetSubscriptionPrices(ctx context.Context, subscr
 
 	res := new(SubscriptionResponse)
 	resp, err := s.client.patch(ctx, "v1/subscriptions/"+subscriptionID, newRequestBodyWithIncluded(SubscriptionUpdateRequestData{
-		Attributes: SubscriptionUpdateAttributes{},
-		ID:         subscriptionID,
-		Type:       "subscriptions",
+		Attributes: SubscriptionUpdateAttributes{
+			FamilySharable:     false,
+			Name:               name,
+			ReviewNote:         reviewNotes,
+			SubscriptionPeriod: string(SubscriptionPeriodP1M),
+			GroupLevel:         1,
+		},
+		ID:   subscriptionID,
+		Type: "subscriptions",
 		Relationships: SubscriptionUpdateRelationships{
 			IntroductoryOffers: struct {
 				Data []*RelationshipData `json:"data"`

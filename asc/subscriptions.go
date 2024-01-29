@@ -563,7 +563,6 @@ func (s *SubscriptionsService) SetSubscriptionPrices(ctx context.Context, subID 
 		startAt = startTime.Format("2006-01-02")
 	}
 
-	var i = 1
 	for _, priceID := range regionPrice {
 		priceJson, err := base64.RawStdEncoding.DecodeString(priceID)
 		if err != nil {
@@ -575,23 +574,22 @@ func (s *SubscriptionsService) SetSubscriptionPrices(ctx context.Context, subID 
 			return nil, nil, err
 		}
 
-		priceData = append(priceData, &RelationshipData{ID: fmt.Sprintf("${price%d}", i), Type: "inAppPurchasePrices"})
+		priceData = append(priceData, &RelationshipData{ID: priceID, Type: "inAppPurchasePrices"})
 		include = append(include, InAppPurchasePriceInlineCreate{
 			Type: "inAppPurchasePrices",
-			ID:   fmt.Sprintf("${price%d}", i),
+			ID:   priceID,
 			Attributes: InAppPurchasePriceInlineCreateAttributes{
 				StartDate: startAt,
 			},
 			Relationships: InAppPurchasePriceInlineCreateRelationships{
 				InAppPurchasePricePoint: struct {
 					Data *RelationshipData `json:"data"`
-				}{Data: &RelationshipData{ID: priceInfo["p"], Type: "inAppPurchasePricePoints"}},
+				}{Data: &RelationshipData{ID: priceID, Type: "inAppPurchasePricePoints"}},
 				InAppPurchaseV2: struct {
 					Data *RelationshipData `json:"data"`
 				}{Data: &RelationshipData{ID: subID, Type: "inAppPurchases"}},
 			},
 		})
-		i++
 	}
 
 	res := new(SubscriptionResponse)

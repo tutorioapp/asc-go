@@ -136,9 +136,9 @@ type SubscriptionLocalizationResponse struct {
 }
 
 type SubscriptionPriceCreateAttributes struct {
-	PreserveCurrentPrice bool   `json:"preserveCurrentPrice"`
-	Preserved            bool   `json:"preserved,omitempty"`
-	StartDate            string `json:"startDate"`
+	PreserveCurrentPrice bool `json:"preserveCurrentPrice"`
+	Preserved            bool `json:"preserved,omitempty"`
+	StartDate            any  `json:"startDate"`
 }
 
 type SubscriptionPriceCreate struct {
@@ -523,7 +523,7 @@ func (s *SubscriptionsService) SetSubscriptionPrices(ctx context.Context, name, 
 		prices = append(prices, SubscriptionPriceCreateData{
 			Attributes: SubscriptionPriceCreateAttributes{
 				PreserveCurrentPrice: true,
-				StartDate:            time.Now().Format("2006-01-02"),
+				StartDate:            nil,
 			},
 			ID: subscriptionID,
 			Relationships: struct {

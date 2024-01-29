@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/url"
 	"time"
 )
@@ -120,8 +121,6 @@ type SubscriptionPrice struct {
 }
 
 type SubscriptionPriceAttributes struct {
-	Preserved bool   `json:"preserved"`
-	StartDate string `json:"startDate"`
 }
 
 type SubscriptionLocalization struct {
@@ -219,6 +218,12 @@ type SubscriptionUpdateRelationships struct {
 	PromotionalOffers struct {
 		Data []*RelationshipData `json:"data"`
 	} `json:"promotionalOffers"`
+}
+
+type SubscriptionPriceUpdateRelationships struct {
+	Prices struct {
+		Data []*RelationshipData `json:"data"`
+	} `json:"prices"`
 }
 
 // SubscriptionGroupLocalizationData defines model for SubscriptionGroupLocalizationCreateRequest.Data
@@ -515,54 +520,39 @@ func (s *SubscriptionsService) GetSubscription(ctx context.Context, id string) (
 	return res, resp, err
 }
 
-type InAppPurchasePriceScheduleCreateRequest struct {
-	Relationships InAppPurchasePriceScheduleCreateRequestRelationships `json:"relationships"`
-	Type          string                                               `json:"type"`
+type SubscriptionPriceCreateRequest struct {
+	Relationships SubscriptionPriceUpdateRelationships `json:"relationships"`
+	Type          string                               `json:"type"`
+	ID            string                               `json:"id"`
 }
 
-type InAppPurchasePriceScheduleCreateRequestRelationships struct {
-	BaseTerritory struct {
-		Data *RelationshipData `json:"data"`
-	} `json:"baseTerritory"`
-	InAppPurchase struct {
-		Data *RelationshipData `json:"data"`
-	} `json:"inAppPurchase"`
-	ManualPrices struct {
+type SubscriptionPriceScheduleCreateRequestRelationships struct {
+	Prices struct {
 		Data []*RelationshipData `json:"data"`
-	} `json:"manualPrices"`
+	} `json:"prices"`
 }
 
-type InAppPurchasePriceInlineCreate struct {
-	Attributes    InAppPurchasePriceInlineCreateAttributes    `json:"attributes"`
-	ID            string                                      `json:"id"`
-	Relationships InAppPurchasePriceInlineCreateRelationships `json:"relationships"`
-	Type          string                                      `json:"type"`
+type SubscriptionPriceInlineCreate struct {
+	Attributes    SubscriptionPriceInlineCreateAttributes    `json:"attributes"`
+	ID            string                                     `json:"id"`
+	Relationships SubscriptionPriceInlineCreateRelationships `json:"relationships"`
+	Type          string                                     `json:"type"`
 }
 
-type InAppPurchasePriceInlineCreateAttributes struct {
-	StartDate any `json:"startDate"`
+type SubscriptionPriceInlineCreateAttributes struct {
 }
 
-type InAppPurchasePriceInlineCreateRelationships struct {
+type SubscriptionPriceInlineCreateRelationships struct {
 	InAppPurchasePricePoint struct {
 		Data *RelationshipData `json:"data"`
-	} `json:"inAppPurchasePricePoint"`
-	InAppPurchaseV2 struct {
-		Data *RelationshipData `json:"data"`
-	} `json:"inAppPurchaseV2"`
+	} `json:"subscriptionPricePoint"`
 }
 
 func (s *SubscriptionsService) SetSubscriptionPrices(ctx context.Context, subID string, startTime time.Time, regionPrice map[string]string) (*SubscriptionResponse, *Response, error) {
 	var priceData []*RelationshipData
-	var include []InAppPurchasePriceInlineCreate
+	var include []SubscriptionPriceInlineCreate
 
-	var startAt any
-	if startTime == (time.Time{}) {
-		startAt = nil
-	} else {
-		startAt = startTime.Format("2006-01-02")
-	}
-
+	i := 0
 	for _, priceID := range regionPrice {
 		priceJson, err := base64.RawStdEncoding.DecodeString(priceID)
 		if err != nil {
@@ -574,32 +564,41 @@ func (s *SubscriptionsService) SetSubscriptionPrices(ctx context.Context, subID 
 			return nil, nil, err
 		}
 
-		priceData = append(priceData, &RelationshipData{ID: priceID, Type: "inAppPurchasePrices"})
-		include = append(include, InAppPurchasePriceInlineCreate{
-			Type: "inAppPurchasePrices",
-			ID:   priceID,
-			Attributes: InAppPurchasePriceInlineCreateAttributes{
-				StartDate: startAt,
-			},
-			Relationships: InAppPurchasePriceInlineCreateRelationships{
+		priceData = append(priceData, &RelationshipData{ID: "${newprice-" + fmt.Sprintf("%d", i) + "}", Type: "subscriptionPrices"})
+		include = append(include, SubscriptionPriceInlineCreate{
+			Type: "subscriptionPrices",
+			ID:   "${newprice-" + fmt.Sprintf("%d", i) + "}",
+			Relationships: SubscriptionPriceInlineCreateRelationships{
 				InAppPurchasePricePoint: struct {
 					Data *RelationshipData `json:"data"`
-				}{Data: &RelationshipData{ID: priceID, Type: "inAppPurchasePricePoints"}},
-				InAppPurchaseV2: struct {
-					Data *RelationshipData `json:"data"`
-				}{Data: &RelationshipData{ID: subID, Type: "inAppPurchases"}},
+				}{Data: &RelationshipData{ID: priceID, Type: "subscriptionPricePoints"}},
 			},
 		})
+
+		i++
 	}
 
+	builtReq := newRequestBodyWithIncluded(SubscriptionPriceCreateRequest{
+		Type: "subscriptions",
+		ID:   subID,
+		Relationships: SubscriptionPriceUpdateRelationships{
+			Prices: struct {
+				Data []*RelationshipData `json:"data"`
+			}{Data: priceData},
+		},
+	}, include)
+	// print as json
+	builtReqJson, _ := json.Marshal(builtReq)
+
+	// dump to pricesOutput.json
+	ioutil.WriteFile("pricesOutput.json", builtReqJson, 0644)
+
 	res := new(SubscriptionResponse)
-	resp, err := s.client.post(ctx, "v1/inAppPurchasePriceSchedules", newRequestBodyWithIncluded(InAppPurchasePriceScheduleCreateRequest{
-		Type: "inAppPurchasePriceSchedules",
-		Relationships: InAppPurchasePriceScheduleCreateRequestRelationships{
-			InAppPurchase: struct {
-				Data *RelationshipData `json:"data"`
-			}{Data: &RelationshipData{ID: subID, Type: "inAppPurchases"}},
-			ManualPrices: struct {
+	resp, err := s.client.patch(ctx, "v1/subscriptions/"+subID, newRequestBodyWithIncluded(SubscriptionPriceCreateRequest{
+		Type: "subscriptions",
+		ID:   subID,
+		Relationships: SubscriptionPriceUpdateRelationships{
+			Prices: struct {
 				Data []*RelationshipData `json:"data"`
 			}{Data: priceData},
 		},

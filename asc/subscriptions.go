@@ -2,6 +2,7 @@ package asc
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"net/url"
@@ -522,6 +523,17 @@ func (s *SubscriptionsService) SetSubscriptionPrices(ctx context.Context, name, 
 	//var priceRels []*RelationshipData
 
 	for region, price := range regionPrice {
+
+		priceJson, err := base64.RawStdEncoding.DecodeString(price)
+		if err != nil {
+			return nil, nil, err
+		}
+
+		var priceInfo map[string]string
+		if err := json.Unmarshal(priceJson, &priceInfo); err != nil {
+			return nil, nil, err
+		}
+
 		prices = append(prices, SubscriptionPriceCreateData{
 			Attributes: SubscriptionPriceCreateAttributes{
 				PreserveCurrentPrice: true,
@@ -544,7 +556,7 @@ func (s *SubscriptionsService) SetSubscriptionPrices(ctx context.Context, name, 
 				}{Data: &RelationshipData{ID: subscriptionID, Type: "subscriptions"}},
 				SubscriptionPricePoint: struct {
 					Data *RelationshipData `json:"data"`
-				}{Data: &RelationshipData{ID: price, Type: "subscriptionPricePoints"}},
+				}{Data: &RelationshipData{ID: priceInfo["p"], Type: "subscriptionPricePoints"}},
 				Territory: struct {
 					Data *RelationshipData `json:"data"`
 				}{Data: &RelationshipData{ID: region, Type: "territories"}},
@@ -564,6 +576,8 @@ func (s *SubscriptionsService) SetSubscriptionPrices(ctx context.Context, name, 
 		//
 		//priceRels = append(priceRels, &RelationshipData{ID: priceInfo["p"], Type: "subscriptionPrices"})
 	}
+
+	fmt.Println(prices)
 
 	res := new(SubscriptionResponse)
 	resp, err := s.client.patch(ctx, "v1/subscriptions/"+subscriptionID, newRequestBodyWithIncluded(SubscriptionUpdateRequestData{

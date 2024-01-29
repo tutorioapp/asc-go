@@ -553,18 +553,7 @@ func (s *SubscriptionsService) SetSubscriptionPrices(ctx context.Context, subscr
 	resp, err := s.client.patch(ctx, "v1/subscriptions/"+subscriptionID, newRequestBodyWithIncluded(SubscriptionUpdateRequestData{
 		Attributes: SubscriptionUpdateAttributes{},
 		ID:         subscriptionID,
-		Relationships: SubscriptionUpdateRelationships{
-			IntroductoryOffers: struct {
-				Data []*RelationshipData `json:"data"`
-			}{nil},
-			Prices: struct {
-				Data []*RelationshipData `json:"data"`
-			}{nil},
-			PromotionalOffers: struct {
-				Data []*RelationshipData `json:"data"`
-			}{nil},
-		},
-		Type: "subscriptions",
+		Type:       "subscriptions",
 	}, prices), res)
 	return res, resp, err
 }

@@ -2,6 +2,7 @@ package asc
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/url"
 	"time"
@@ -570,12 +571,17 @@ func (s *SubscriptionsService) SetSubscriptionPrices(ctx context.Context, name, 
 			}{Data: []*RelationshipData{}},
 			Prices: struct {
 				Data []*RelationshipData `json:"data"`
-			}{Data: priceRels},
+			}{Data: []*RelationshipData{}},
 			PromotionalOffers: struct {
 				Data []*RelationshipData `json:"data"`
 			}{Data: []*RelationshipData{}},
 		},
 	}, prices), res)
+
+	resJson, _ := json.Marshal(res)
+	fmt.Println(string(resJson))
+	fmt.Println(resp.Status)
+
 	return res, resp, err
 }
 

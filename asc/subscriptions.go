@@ -2,7 +2,6 @@ package asc
 
 import (
 	"context"
-	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"net/url"
@@ -518,15 +517,15 @@ func (s *SubscriptionsService) GetSubscription(ctx context.Context, id string) (
 // SetSubscriptionPrices bulks sets the prices for a subscription.
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/modify_an_auto-renewable_subscription#path-parameters
-func (s *SubscriptionsService) SetSubscriptionPrices(ctx context.Context, name, reviewNotes, subscriptionID string, regionPrice map[string]string) (*SubscriptionResponse, *Response, error) {
+func (s *SubscriptionsService) SetSubscriptionPrices(ctx context.Context, name, reviewNotes, subscriptionID string, startTime time.Time, regionPrice map[string]string) (*SubscriptionResponse, *Response, error) {
 	var prices []SubscriptionPriceCreateData
-	var priceRels []*RelationshipData
+	//var priceRels []*RelationshipData
 
 	for region, price := range regionPrice {
 		prices = append(prices, SubscriptionPriceCreateData{
 			Attributes: SubscriptionPriceCreateAttributes{
 				PreserveCurrentPrice: true,
-				StartDate:            time.Now().Format("2006-01-02"), // ISO 8601
+				StartDate:            startTime.Format("2006-01-02"), // ISO 8601
 			},
 			ID: subscriptionID,
 			Relationships: struct {
@@ -553,17 +552,17 @@ func (s *SubscriptionsService) SetSubscriptionPrices(ctx context.Context, name, 
 			Type: "subscriptionPrices",
 		})
 
-		priceJson, err := base64.RawStdEncoding.DecodeString(price)
-		if err != nil {
-			return nil, nil, err
-		}
-
-		var priceInfo map[string]string
-		if err := json.Unmarshal(priceJson, &priceInfo); err != nil {
-			return nil, nil, err
-		}
-
-		priceRels = append(priceRels, &RelationshipData{ID: priceInfo["p"], Type: "subscriptionPrices"})
+		//priceJson, err := base64.RawStdEncoding.DecodeString(price)
+		//if err != nil {
+		//	return nil, nil, err
+		//}
+		//
+		//var priceInfo map[string]string
+		//if err := json.Unmarshal(priceJson, &priceInfo); err != nil {
+		//	return nil, nil, err
+		//}
+		//
+		//priceRels = append(priceRels, &RelationshipData{ID: priceInfo["p"], Type: "subscriptionPrices"})
 	}
 
 	res := new(SubscriptionResponse)
@@ -583,7 +582,7 @@ func (s *SubscriptionsService) SetSubscriptionPrices(ctx context.Context, name, 
 			}{Data: []*RelationshipData{}},
 			Prices: struct {
 				Data []*RelationshipData `json:"data"`
-			}{Data: priceRels},
+			}{Data: []*RelationshipData{}},
 			PromotionalOffers: struct {
 				Data []*RelationshipData `json:"data"`
 			}{Data: []*RelationshipData{}},

@@ -2,6 +2,7 @@ package asc
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"net/url"
@@ -551,7 +552,18 @@ func (s *SubscriptionsService) SetSubscriptionPrices(ctx context.Context, name, 
 			},
 			Type: "subscriptionPrices",
 		})
-		priceRels = append(priceRels, &RelationshipData{ID: price, Type: "subscriptionPrices"})
+
+		priceJson, err := base64.RawStdEncoding.DecodeString(price)
+		if err != nil {
+			return nil, nil, err
+		}
+
+		var priceInfo map[string]string
+		if err := json.Unmarshal(priceJson, &priceInfo); err != nil {
+			return nil, nil, err
+		}
+
+		priceRels = append(priceRels, &RelationshipData{ID: priceInfo["p"], Type: "subscriptionPrices"})
 	}
 
 	res := new(SubscriptionResponse)

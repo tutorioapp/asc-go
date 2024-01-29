@@ -523,7 +523,7 @@ func (s *SubscriptionsService) SetSubscriptionPrices(ctx context.Context, name, 
 		prices = append(prices, SubscriptionPriceCreateData{
 			Attributes: SubscriptionPriceCreateAttributes{
 				PreserveCurrentPrice: true,
-				StartDate:            nil,
+				StartDate:            time.Now().Format("2006-01-02"), // ISO 8601
 			},
 			ID: subscriptionID,
 			Relationships: struct {

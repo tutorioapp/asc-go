@@ -209,13 +209,13 @@ type SubscriptionUpdateAttributes struct {
 
 type SubscriptionUpdateRelationships struct {
 	IntroductoryOffers struct {
-		Data []RelationshipData `json:"data"`
-	} `json:"introductoryOffer"`
+		Data []*RelationshipData `json:"data"`
+	} `json:"introductoryOffers"`
 	Prices struct {
-		Data []RelationshipData `json:"data"`
+		Data []*RelationshipData `json:"data"`
 	} `json:"prices"`
 	PromotionalOffers struct {
-		Data []RelationshipData `json:"data"`
+		Data []*RelationshipData `json:"data"`
 	} `json:"promotionalOffers"`
 }
 

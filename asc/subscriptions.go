@@ -2,7 +2,6 @@ package asc
 
 import (
 	"context"
-	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"net/url"
@@ -524,15 +523,15 @@ func (s *SubscriptionsService) SetSubscriptionPrices(ctx context.Context, name, 
 
 	for region, price := range regionPrice {
 
-		priceJson, err := base64.RawStdEncoding.DecodeString(price)
-		if err != nil {
-			return nil, nil, err
-		}
-
-		var priceInfo map[string]string
-		if err := json.Unmarshal(priceJson, &priceInfo); err != nil {
-			return nil, nil, err
-		}
+		//priceJson, err := base64.RawStdEncoding.DecodeString(price)
+		//if err != nil {
+		//	return nil, nil, err
+		//}
+		//
+		//var priceInfo map[string]string
+		//if err := json.Unmarshal(priceJson, &priceInfo); err != nil {
+		//	return nil, nil, err
+		//}
 
 		prices = append(prices, SubscriptionPriceCreateData{
 			Attributes: SubscriptionPriceCreateAttributes{
@@ -556,7 +555,7 @@ func (s *SubscriptionsService) SetSubscriptionPrices(ctx context.Context, name, 
 				}{Data: &RelationshipData{ID: subscriptionID, Type: "subscriptions"}},
 				SubscriptionPricePoint: struct {
 					Data *RelationshipData `json:"data"`
-				}{Data: &RelationshipData{ID: priceInfo["p"], Type: "subscriptionPricePoints"}},
+				}{Data: &RelationshipData{ID: price, Type: "subscriptionPricePoints"}},
 				Territory: struct {
 					Data *RelationshipData `json:"data"`
 				}{Data: &RelationshipData{ID: region, Type: "territories"}},

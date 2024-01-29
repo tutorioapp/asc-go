@@ -518,6 +518,7 @@ func (s *SubscriptionsService) GetSubscription(ctx context.Context, id string) (
 // https://developer.apple.com/documentation/appstoreconnectapi/modify_an_auto-renewable_subscription#path-parameters
 func (s *SubscriptionsService) SetSubscriptionPrices(ctx context.Context, name, reviewNotes, subscriptionID string, regionPrice map[string]string) (*SubscriptionResponse, *Response, error) {
 	var prices []SubscriptionPriceCreateData
+	var priceRels []*RelationshipData
 
 	for region, price := range regionPrice {
 		prices = append(prices, SubscriptionPriceCreateData{
@@ -549,6 +550,7 @@ func (s *SubscriptionsService) SetSubscriptionPrices(ctx context.Context, name, 
 			},
 			Type: "subscriptionPrices",
 		})
+		priceRels = append(priceRels, &RelationshipData{ID: price, Type: "subscriptionPrices"})
 	}
 
 	res := new(SubscriptionResponse)
@@ -568,7 +570,7 @@ func (s *SubscriptionsService) SetSubscriptionPrices(ctx context.Context, name, 
 			}{Data: []*RelationshipData{}},
 			Prices: struct {
 				Data []*RelationshipData `json:"data"`
-			}{Data: []*RelationshipData{}},
+			}{Data: priceRels},
 			PromotionalOffers: struct {
 				Data []*RelationshipData `json:"data"`
 			}{Data: []*RelationshipData{}},

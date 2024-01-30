@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/url"
 	"time"
 )
@@ -590,101 +591,6 @@ func (s *SubscriptionsService) SetSubscriptionPrices(ctx context.Context, subID 
 	return res, resp, err
 }
 
-//// SetSubscriptionPrices bulks sets the prices for a subscription.
-////
-//// https://developer.apple.com/documentation/appstoreconnectapi/modify_an_auto-renewable_subscription#path-parameters
-//func (s *SubscriptionsService) SetSubscriptionPrices(ctx context.Context, name, reviewNotes, subscriptionID string, startTime time.Time, regionPrice map[string]string) (*SubscriptionResponse, *Response, error) {
-//	var prices []SubscriptionPriceCreateData
-//	//var priceRels []*RelationshipData
-//
-//	for region, price := range regionPrice {
-//
-//		//priceJson, err := base64.RawStdEncoding.DecodeString(price)
-//		//if err != nil {
-//		//	return nil, nil, err
-//		//}
-//		//
-//		//var priceInfo map[string]string
-//		//if err := json.Unmarshal(priceJson, &priceInfo); err != nil {
-//		//	return nil, nil, err
-//		//}
-//
-//		prices = append(prices, SubscriptionPriceCreateData{
-//			Attributes: SubscriptionPriceCreateAttributes{
-//				PreserveCurrentPrice: true,
-//				StartDate:            startTime.Format("2006-01-02"), // ISO 8601
-//			},
-//			ID: subscriptionID,
-//			Relationships: struct {
-//				Subscription struct {
-//					Data *RelationshipData `json:"data"`
-//				} `json:"subscription"`
-//				SubscriptionPricePoint struct {
-//					Data *RelationshipData `json:"data"`
-//				} `json:"subscriptionPricePoint"`
-//				Territory struct {
-//					Data *RelationshipData `json:"data"`
-//				} `json:"territory"`
-//			}{
-//				Subscription: struct {
-//					Data *RelationshipData `json:"data"`
-//				}{Data: &RelationshipData{ID: subscriptionID, Type: "subscriptions"}},
-//				SubscriptionPricePoint: struct {
-//					Data *RelationshipData `json:"data"`
-//				}{Data: &RelationshipData{ID: price, Type: "subscriptionPricePoints"}},
-//				Territory: struct {
-//					Data *RelationshipData `json:"data"`
-//				}{Data: &RelationshipData{ID: region, Type: "territories"}},
-//			},
-//			Type: "subscriptionPrices",
-//		})
-//
-//		//priceJson, err := base64.RawStdEncoding.DecodeString(price)
-//		//if err != nil {
-//		//	return nil, nil, err
-//		//}
-//		//
-//		//var priceInfo map[string]string
-//		//if err := json.Unmarshal(priceJson, &priceInfo); err != nil {
-//		//	return nil, nil, err
-//		//}
-//		//
-//		//priceRels = append(priceRels, &RelationshipData{ID: priceInfo["p"], Type: "subscriptionPrices"})
-//	}
-//
-//	fmt.Println(prices)
-//
-//	res := new(SubscriptionResponse)
-//	resp, err := s.client.patch(ctx, "v1/subscriptions/"+subscriptionID, newRequestBodyWithIncluded(SubscriptionUpdateRequestData{
-//		Attributes: SubscriptionUpdateAttributes{
-//			FamilySharable:     false,
-//			Name:               name,
-//			ReviewNote:         reviewNotes,
-//			SubscriptionPeriod: string(SubscriptionPeriodP1M),
-//			GroupLevel:         1,
-//		},
-//		ID:   subscriptionID,
-//		Type: "subscriptions",
-//		Relationships: SubscriptionUpdateRelationships{
-//			IntroductoryOffers: struct {
-//				Data []*RelationshipData `json:"data"`
-//			}{Data: []*RelationshipData{}},
-//			Prices: struct {
-//				Data []*RelationshipData `json:"data"`
-//			}{Data: []*RelationshipData{}},
-//			PromotionalOffers: struct {
-//				Data []*RelationshipData `json:"data"`
-//			}{Data: []*RelationshipData{}},
-//		},
-//	}, prices), res)
-//
-//	resJson, _ := json.Marshal(res)
-//	fmt.Println(string(resJson))
-//	fmt.Println(resp.Status)
-//
-//	return res, resp, err
-//}
-
 // GetSubscriptionPricePoints returns a list of approved prices apple will allow you to set for a subscription.
 //
 // https://developer.apple.com/documentation/appstoreconnectapi/read_subscription_price_point_information
@@ -701,4 +607,31 @@ func (s *SubscriptionsService) GetSubscriptionPrice(ctx context.Context, id, ter
 	res := new(SubscriptionPriceResponse)
 	resp, err := s.client.get(ctx, "v1/subscriptions/"+id+"/prices?include=subscriptionPricePoint&filter[territory]="+url.QueryEscape(territory)+"&limit=200", nil, res)
 	return res, resp, err
+}
+
+func (s *SubscriptionsService) ReserveSubscriptionReviewScreenshot(ctx context.Context, id string, fileName string, fileSize int64) (*Response, error) {
+	res := map[string]interface{}{}
+
+	resp, err := s.client.post(ctx, "v1/subscriptionAppStoreReviewScreenshots", newRequestBody(map[string]interface{}{
+		"data": map[string]interface{}{
+			"type": "subscriptionAppStoreReviewScreenshots",
+			"attributes": map[string]interface{}{
+				"fileName": fileName,
+				"fileSize": fileSize,
+			},
+			"relationships": map[string]interface{}{
+				"subscription": map[string]interface{}{
+					"data": map[string]interface{}{
+						"id":   id,
+						"type": "subscriptions",
+					},
+				},
+			},
+		},
+	}), &res)
+
+	// log response
+	log.Printf("Response: %v", resp)
+
+	return resp, err
 }

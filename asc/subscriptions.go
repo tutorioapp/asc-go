@@ -715,3 +715,19 @@ func (s *SubscriptionsService) UploadFile(ctx context.Context, url string, file 
 
 	return resp, nil
 }
+
+// submit subscription for review
+func (s *SubscriptionsService) SubmitSubscriptionForReview(ctx context.Context, id string) (*Response, error) {
+	return s.client.post(ctx, "v1/subscriptionSubmissions",
+		newRequestBody(map[string]interface{}{
+			"type": "subscriptionSubmissions",
+			"relationships": map[string]interface{}{
+				"subscription": map[string]interface{}{
+					"data": map[string]interface{}{
+						"id":   id,
+						"type": "subscriptions",
+					},
+				},
+			},
+		}), nil)
+}

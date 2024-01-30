@@ -4,8 +4,11 @@ import (
 	"context"
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"fmt"
-	"log"
+	"io/fs"
+	"io/ioutil"
+	"net/http"
 	"net/url"
 	"time"
 )
@@ -609,29 +612,106 @@ func (s *SubscriptionsService) GetSubscriptionPrice(ctx context.Context, id, ter
 	return res, resp, err
 }
 
-func (s *SubscriptionsService) ReserveSubscriptionReviewScreenshot(ctx context.Context, id string, fileName string, fileSize int64) (*Response, error) {
+// ReserveSubscriptionReviewScreenshot is disgusting clearly reverse engineered code below that uses map[string]interface{} instead of structs
+func (s *SubscriptionsService) ReserveSubscriptionReviewScreenshot(ctx context.Context, id string, file fs.File) (*Response, error) {
+	// get file size of file
+	stat, err := file.Stat()
+	if err != nil {
+		return nil, err
+	}
+
+	fileSize := stat.Size()
+	fileName := stat.Name()
+
 	res := map[string]interface{}{}
 
-	resp, err := s.client.post(ctx, "v1/subscriptionAppStoreReviewScreenshots", newRequestBody(map[string]interface{}{
-		"data": map[string]interface{}{
-			"type": "subscriptionAppStoreReviewScreenshots",
-			"attributes": map[string]interface{}{
-				"fileName": fileName,
-				"fileSize": fileSize,
-			},
-			"relationships": map[string]interface{}{
-				"subscription": map[string]interface{}{
-					"data": map[string]interface{}{
-						"id":   id,
-						"type": "subscriptions",
-					},
+	_, err = s.client.post(ctx, "v1/subscriptionAppStoreReviewScreenshots", newRequestBody(map[string]interface{}{
+		"type": "subscriptionAppStoreReviewScreenshots",
+		"attributes": map[string]interface{}{
+			"fileName": fileName,
+			"fileSize": fileSize,
+		},
+		"relationships": map[string]interface{}{
+			"subscription": map[string]interface{}{
+				"data": map[string]interface{}{
+					"id":   id,
+					"type": "subscriptions",
 				},
 			},
 		},
 	}), &res)
+	if err != nil {
+		return nil, err
+	}
 
-	// log response
-	log.Printf("Response: %v", resp)
+	// json out res
+	data, err := json.Marshal(res)
+	if err != nil {
+		return nil, err
+	}
 
-	return resp, err
+	fmt.Println(string(data))
+
+	if res["data"] == nil {
+		return nil, errors.New("no data in response")
+	}
+
+	url := res["data"].(map[string]interface{})["attributes"].(map[string]interface{})["uploadOperations"].([]interface{})[0].(map[string]interface{})["url"].(string)
+
+	htpResp, err := s.UploadFile(ctx, url, file)
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Println("Response status:", htpResp.Status)
+
+	// now commit it (patch request)
+	commitResp, err := s.client.patch(ctx, "v1/subscriptionAppStoreReviewScreenshots/"+res["data"].(map[string]interface{})["id"].(string), newRequestBody(map[string]interface{}{
+		"type": "subscriptionAppStoreReviewScreenshots",
+		"id":   res["data"].(map[string]interface{})["id"].(string),
+		"attributes": map[string]interface{}{
+			"uploaded": true,
+		},
+	}), nil)
+
+	return commitResp, err
+}
+
+func (s *SubscriptionsService) UploadFile(ctx context.Context, url string, file fs.File) (*http.Response, error) {
+
+	// Create a PUT request with the URL and file reader
+	req, err := http.NewRequest(http.MethodPut, url, file)
+	if err != nil {
+		return nil, err
+	}
+
+	// set png
+	req.Header.Set("Content-Type", "image/png")
+	// set Content-Length
+	stat, err := file.Stat()
+	if err != nil {
+		return nil, err
+	}
+
+	req.ContentLength = stat.Size()
+
+	// Send the request
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	// Log HTTP status for debug
+	fmt.Println("Response status:", resp.Status)
+
+	// If the response status code is not 200 (StatusOK),
+	// print error and return an error.
+	if resp.StatusCode != http.StatusOK {
+		bodyBytes, _ := ioutil.ReadAll(resp.Body)
+		resp.Body.Close()
+		fmt.Println("http error:", resp.StatusCode, string(bodyBytes))
+		return nil, errors.New(string(bodyBytes))
+	}
+
+	return resp, nil
 }
